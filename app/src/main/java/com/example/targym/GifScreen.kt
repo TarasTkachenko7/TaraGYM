@@ -1,5 +1,6 @@
 package com.example.targym
 
+import android.R.attr.name
 import android.R.attr.text
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.targym.domain.model.Advice
 import com.example.targym.domain.model.Exercise
+import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.domain.model.Repetition
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.Background
@@ -80,7 +82,7 @@ fun GifScreen(
                 .padding(horizontal = 16.dp)
         ) {
             Text(
-                text = exercise.title,
+                text = exercise.name,
                 style = TextStyle(
                     fontSize = 20.sp,
                     color = FirstText,
@@ -235,5 +237,15 @@ fun AdviceSingle(
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun GifPreview() {
-    GifScreen(Exercise("Приседание со штангой", listOf(Repetition(100.0, 5))), listOf(Advice("Спину прямо")))
+    GifScreen(
+        Exercise(
+            id = 1, workoutDayId = 1, muscleGroup = MuscleGroup.CHEST, name = "Приседание со штангой", note = "Глубже",
+            repetitions = listOf(
+                Repetition(1, 1, 100.0, 8, isDone = true),
+                Repetition(1, 1, 100.0, 8, isDone = true),
+                Repetition(1, 1, 105.0, 6, isDone = false)
+            )
+        ),
+        advices = listOf(Advice(1, 1, "Спину прямо"))
+    )
 }
