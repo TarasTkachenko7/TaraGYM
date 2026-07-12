@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.targym.domain.model.Exercise
+import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.domain.model.Repetition
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.Background
@@ -71,11 +72,15 @@ fun MainScreen(
         ) {
             val list = listOf(MenuItems.BREAST, MenuItems.BACK, MenuItems.LEGS)
             val exercise = Exercise(
-                title = "Приседание со штангой",
+                id = 1,
+                workoutDayId = 1,
+                muscleGroup = MuscleGroup.CHEST,
+                name = "Приседание со штангой",
+                note = "Глубже",
                 repetitions = listOf(
-                    Repetition(100.0, 8, isDone = true),
-                    Repetition(100.0, 8, isDone = true),
-                    Repetition(105.0, 6, isDone = false)
+                    Repetition(1, 1, 100.0, 8, isDone = true),
+                    Repetition(1, 1, 100.0, 8, isDone = true),
+                    Repetition(1, 1, 105.0, 6, isDone = false)
                 )
             )
 
@@ -176,7 +181,7 @@ fun ExerciseItem(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = exercise.title,
+                text = exercise.name,
                 style = TextStyle(
                     fontSize = 20.sp,
                     color = FirstText,
