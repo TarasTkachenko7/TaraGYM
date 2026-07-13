@@ -5,6 +5,6 @@ data class Exercise(
     val workoutDayId: Long,
     val muscleGroup: MuscleGroup,
     val name: String,
-    val note: String,
-    val repetitions: List<Repetition>
+    val repetitions: List<Repetition>,
+    val note: String?,
 )
