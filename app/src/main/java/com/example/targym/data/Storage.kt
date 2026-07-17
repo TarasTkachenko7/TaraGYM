@@ -11,7 +11,8 @@ object Storage {
     val mockDays = mutableListOf<WorkoutDay>(
         WorkoutDay(id = 1, name = "Верх А"),
         WorkoutDay(id = 2, name = "Верх Б"),
-        WorkoutDay(id = 3, name = "Ножной")
+        WorkoutDay(id = 3, name = "Ножной"),
+        WorkoutDay(id = 4, name = "Пресс"),
     )
 
     val mockExercises = mutableListOf<Exercise>(

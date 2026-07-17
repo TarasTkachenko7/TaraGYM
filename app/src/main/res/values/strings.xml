@@ -7,4 +7,52 @@
     <string name="triceps">Трицепс</string>
     <string name="biceps">Бицепс</string>
     <string name="abs">Пресс</string>
+
+    <!--    MainEmpty    -->
+    <string name="you_don_have">У вас пока нет\n</string>
+    <string name="training_days">тренировочных дней</string>
+    <string name="create_first_training">Создайте первую тренировку и начните отслеживать свой прогресс</string>
+    <string name="add_a_training_day">СОЗДАТЬ ТРЕНИРОВКУ</string>
+
+    <!--    MainSuccessEmpty    -->
+    <string name="empty_day">Тренировочный день пуст</string>
+    <string name="add_first_muscle">Добавьте первую группу мышц, чтобы начать планирование</string>
+
+    <string name="new_exercise">Новое упражнение</string>
+    <string name="add">Добавить</string>
+    <string name="edit">Редактировать</string>
+    <string name="backstack">Назад</string>
+    <string name="kg">кг</string>
+    <string name="x">x</string>
+    <string name="x_info">Вес и повторения</string>
+    <string name="delete_rep">Удалить подход</string>
+    <string name="save">СОХРАНИТЬ</string>
+    <string name="add_details">Добавьте детали выполнения...</string>
+    <string name="notes">Заметки</string>
+    <string name="add_rep">Добавить подход</string>
+    <string name="kg_reps">КГ / ПОВТОРЫ</string>
+    <string name="reps">Подходы</string>
+    <string name="exercise">УПРАЖНЕНИЕ</string>
+    <string name="finish_training">ЗАВЕРШИТЬ ТРЕНИРОВКУ</string>
+    <string name="muscle_group">Группа мышц</string>
+    <string name="watch_technique">Смотреть технику выполнения</string>
+    <string name="edit_exercise">Редактировать упражнение</string>
+    <string name="muscle_info">Информация о группе мышц</string>
+    <string name="add_a_muscle_group">ДОБАВИТЬ ГРУППУ МЫШЦ</string>
+    <string name="days_list">список дней</string>
+    <string name="completed">выполнено</string>
+    <string name="not_completed">не выполнено</string>
+    <string name="error_empty_name">Название не может быть пустым</string>
+    <string name="error_empty_reps">Добавьте хотя бы один подход</string>
+    <string name="error_not_found">Упражнение не найдено</string>
+    <string name="error_empty_muscle_group">Мышечная группа не найдена</string>
+    <string name="new_day">Новый день</string>
+    <string name="edit_days_title">Редактирование дней</string>
+    <string name="delete">Удалить</string>
+    <string name="adding_a_training_day">ДОБАВИТЬ ТРЕНИРОВКУ</string>
+    <string name="no_days_yet">Тренировок пока нет</string>
+    <string name="delete_day_title">Удалить день?</string>
+    <string name="delete_day_confirm">Вы уверены, что хотите удалить день </string>
+    <string name="cancel">Отмена</string>
+    <string name="error_duplicate_day_name">День с таким названием уже существует</string>
 </resources>
