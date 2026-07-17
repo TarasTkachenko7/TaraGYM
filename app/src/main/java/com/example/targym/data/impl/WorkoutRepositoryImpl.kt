@@ -20,17 +20,17 @@ class WorkoutRepositoryImpl : WorkoutRepository {
         return _days
     }
 
-    override suspend fun addWorkoutDay(name: String) {
+    override suspend fun addWorkoutDay(name: String): Long {
+        val newId = System.currentTimeMillis()
         _days.update { allDays ->
             val exists = allDays.any { it.name == name }
             if (exists) {
                 allDays
             } else {
-                val newId = System.currentTimeMillis()
-                val newDay = WorkoutDay(newId, name)
-                allDays + newDay
+                allDays + WorkoutDay(newId, name)
             }
         }
+        return newId
     }
 
     override suspend fun deleteWorkoutDay(workoutDayId: Long) {
@@ -53,6 +53,18 @@ class WorkoutRepositoryImpl : WorkoutRepository {
         _advices.update { allAdvices ->
             allAdvices.filter { advice ->
                 advice.exerciseId !in exerciseIdsToDelete
+            }
+        }
+    }
+
+    override suspend fun updateWorkoutDayName(id: Long, newName: String) {
+        _days.update { allDays ->
+            allDays.map { item ->
+                if (item.id == id) {
+                    item.copy(name = newName)
+                } else {
+                    item
+                }
             }
         }
     }

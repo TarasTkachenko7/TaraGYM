@@ -7,21 +7,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.targym.domain.model.Advice
-import com.example.targym.domain.model.Exercise
-import com.example.targym.domain.model.Repetition
-import com.example.targym.presentation.edit.EditScreen
+import com.example.targym.presentation.days.ManageDaysScreen
+import com.example.targym.presentation.days.ManageDaysViewModel
+import com.example.targym.presentation.main.MainScreen
+import com.example.targym.presentation.main.MainViewModel
 import com.example.targym.ui.theme.TarGYMTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModel: ManageDaysViewModel = koinViewModel()
             TarGYMTheme() {
                 Scaffold { innerPadding ->
-                    EditScreen(onNavigationClick = {}, modifier = Modifier.padding(innerPadding))
+                    ManageDaysScreen(viewModel, {} , Modifier.padding(innerPadding))
                 }
             }
         }

@@ -8,8 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface WorkoutRepository {
 
     fun getWorkoutDays(): Flow<List<WorkoutDay>>
-    suspend fun addWorkoutDay(name: String)
+    suspend fun addWorkoutDay(name: String): Long
     suspend fun deleteWorkoutDay(workoutDayId: Long)
+    suspend fun updateWorkoutDayName(id: Long, newName: String)
 
     fun getExercisesByWorkoutDay(workoutDayId: Long): Flow<List<Exercise>>
     suspend fun saveExercise(exercise: Exercise)
