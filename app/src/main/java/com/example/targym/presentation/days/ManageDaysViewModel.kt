@@ -25,10 +25,61 @@ class ManageDaysViewModel(
         }
     }
 
-    fun addWorkoutDay() {
+    fun openAddDayDialog() {
+        _uiState.update {
+            it.copy(
+                isInputDialogOpen = true,
+                inputDialogTitle = R.string.adding_a_training_day_lower,
+                inputDialogText = "",
+                targetDayId = null,
+                errorMessage = null
+            )
+        }
+    }
+
+    fun openEditDayDialog(dayId: Long) {
+        val currentDay = _uiState.value.days.find { it.id == dayId } ?: return
+        _uiState.update {
+            it.copy(
+                isInputDialogOpen = true,
+                inputDialogTitle = R.string.edit_training,
+                inputDialogText = currentDay.name,
+                targetDayId = dayId,
+                errorMessage = null
+            )
+        }
+    }
+
+    fun onDialogTextChanged(newText: String) {
+        _uiState.update { it.copy(inputDialogText = newText, errorMessage = null) }
+    }
+
+    fun closeInputDialog() {
+        _uiState.update { it.copy(isInputDialogOpen = false, inputDialogText = "", targetDayId = null, errorMessage = null) }
+    }
+
+    fun submitDialogInput() {
+        val state = _uiState.value
+        val trimmedName = state.inputDialogText.trim()
+
+        if (trimmedName.isBlank()) {
+            _uiState.update { it.copy(errorMessage = R.string.error_empty_name) }
+            return
+        }
+
+        val isDuplicate = state.days.any { it.id != state.targetDayId && it.name.equals(trimmedName, ignoreCase = true) }
+        if (isDuplicate) {
+            _uiState.update { it.copy(errorMessage = R.string.error_duplicate_day_name) }
+            return
+        }
+
         viewModelScope.launch {
-            val newDayId = repository.addWorkoutDay("")
-            startEditing(newDayId)
+            if (state.targetDayId == null) {
+                repository.addWorkoutDay(trimmedName)
+            } else {
+                repository.updateWorkoutDayName(state.targetDayId, trimmedName)
+            }
+            closeInputDialog()
         }
     }
 
@@ -37,44 +88,6 @@ class ManageDaysViewModel(
             repository.deleteWorkoutDay(workoutDayId)
             dismissDeleteConfirmation()
         }
-    }
-
-    fun updateWorkoutDayName(dayId: Long, newName: String) {
-        val trimmedName = newName.trim()
-
-        if (trimmedName.isBlank()) {
-            _uiState.update {
-                it.copy(
-                    editingDayId = dayId,
-                    errorMessage = R.string.error_empty_name
-                )
-            }
-            return
-        }
-
-        val isDuplicate = _uiState.value.days.any { it.id != dayId && it.name.equals(trimmedName, ignoreCase = true) }
-        if (isDuplicate) {
-            _uiState.update {
-                it.copy(
-                    editingDayId = dayId,
-                    errorMessage = R.string.error_duplicate_day_name
-                )
-            }
-            return
-        }
-
-        viewModelScope.launch {
-            repository.updateWorkoutDayName(dayId, trimmedName)
-            stopEditing()
-        }
-    }
-
-    fun startEditing(dayId: Long) {
-        _uiState.update { it.copy(editingDayId = dayId) }
-    }
-
-    fun stopEditing() {
-        _uiState.update { it.copy(editingDayId = null) }
     }
 
     fun showDeleteConfirmation(day: WorkoutDay) {

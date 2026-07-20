@@ -19,7 +19,7 @@ fun ManageDaysEmpty(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Text(

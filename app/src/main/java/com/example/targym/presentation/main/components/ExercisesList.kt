@@ -21,9 +21,12 @@ fun ExercisesList(
     lazyListState: LazyListState,
     selectedDayId: Long,
     groupedExercises: Map<MuscleGroup, List<ExerciseUiModel>>,
+    activeMuscleMenuGroup: MuscleGroup?,
     hasActiveWorkout: Boolean,
     onRepetitionClick: (Long, Long) -> Unit,
-    onMuscleMenu: () -> Unit,
+    onMenuToggle: (MuscleGroup, Boolean) -> Unit,
+    onAddExerciseClick: (MuscleGroup) -> Unit,
+    onDeleteGroupClick: (MuscleGroup) -> Unit,
     onVideoClick: (Long) -> Unit,
     onEditClick: (Long) -> Unit,
     onFinishWorkoutClick: (Long) -> Unit,
@@ -40,8 +43,11 @@ fun ExercisesList(
                 MuscleGroupSection(
                     muscleGroup = muscleGroup,
                     exercises = exercisesForGroup,
+                    isMenuExpanded = activeMuscleMenuGroup == muscleGroup,
+                    onMenuToggle = { open -> onMenuToggle(muscleGroup, open) },
+                    onAddExerciseClick = { onAddExerciseClick(muscleGroup) },
+                    onDeleteGroupClick = { onDeleteGroupClick(muscleGroup) },
                     onRepetitionClick = onRepetitionClick,
-                    onMuscleMenu = onMuscleMenu,
                     onVideoClick = onVideoClick,
                     onEditClick = onEditClick
                 )

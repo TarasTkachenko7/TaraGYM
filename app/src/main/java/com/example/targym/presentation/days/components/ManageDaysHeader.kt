@@ -35,9 +35,10 @@ fun ManageDaysHeader(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 16.dp)
             .height(40.dp)
-            .background(Background)
-            .padding(horizontal = 20.dp),
+            .background(Background),
         contentAlignment = Alignment.Center
     ) {
         IconButton(

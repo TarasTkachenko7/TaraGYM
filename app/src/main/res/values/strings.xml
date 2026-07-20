@@ -11,17 +11,31 @@
     <!--    MainEmpty    -->
     <string name="you_don_have">У вас пока нет\n</string>
     <string name="training_days">тренировочных дней</string>
-    <string name="create_first_training">Создайте первую тренировку и начните отслеживать свой прогресс</string>
+    <string name="create_first_training">Создайте первую тренировку и начните отслеживать прогресс</string>
     <string name="add_a_training_day">СОЗДАТЬ ТРЕНИРОВКУ</string>
 
     <!--    MainSuccessEmpty    -->
     <string name="empty_day">Тренировочный день пуст</string>
     <string name="add_first_muscle">Добавьте первую группу мышц, чтобы начать планирование</string>
 
+    <!--    ManageDays    -->
+    <string name="adding_a_training_day">ДОБАВИТЬ ТРЕНИРОВКУ</string>
+    <string name="backstack">Назад</string>
+    <string name="edit_days_title">Редактирование дней</string>
+    <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="no_days_yet">Тренировок пока нет</string>
+    <string name="enter_the_name">Введите название</string>
+    <string name="save_lower">Сохранить</string>
+    <string name="adding_a_training_day_lower">Добавить тренировку</string>
+    <string name="edit_training">Редактировать тренировку</string>
+    <string name="delete_day_title">Удалить день?</string>
+    <string name="delete_day_confirm">Вы уверены, что хотите удалить день \"%1$s\" ?</string>
+    <string name="cancel">Отмена</string>
+    <string name="error_duplicate_day_name">День с таким названием уже существует</string>
+
     <string name="new_exercise">Новое упражнение</string>
     <string name="add">Добавить</string>
-    <string name="edit">Редактировать</string>
-    <string name="backstack">Назад</string>
     <string name="kg">кг</string>
     <string name="x">x</string>
     <string name="x_info">Вес и повторения</string>
@@ -47,12 +61,10 @@
     <string name="error_not_found">Упражнение не найдено</string>
     <string name="error_empty_muscle_group">Мышечная группа не найдена</string>
     <string name="new_day">Новый день</string>
-    <string name="edit_days_title">Редактирование дней</string>
-    <string name="delete">Удалить</string>
-    <string name="adding_a_training_day">ДОБАВИТЬ ТРЕНИРОВКУ</string>
-    <string name="no_days_yet">Тренировок пока нет</string>
-    <string name="delete_day_title">Удалить день?</string>
-    <string name="delete_day_confirm">Вы уверены, что хотите удалить день </string>
-    <string name="cancel">Отмена</string>
-    <string name="error_duplicate_day_name">День с таким названием уже существует</string>
+    <string name="select_muscle">Выберите группу мышц</string>
+    <string name="add_first_exercise">Добавьте первое упражнение</string>
+    <string name="all_muscle_groups_already_on_screen">Вы уже добавили все доступные группы мышц на этот тренировочный день</string>
+    <string name="understand">ПОНЯТНО</string>
+    <string name="delete_muscle">Удалить мышечную группу</string>
+    <string name="add_exercise">Добавить упражнение</string>
 </resources>

@@ -17,7 +17,10 @@ data class MainUiState(
     val selectedDayId: Long,
     val groupedExercises: Map<MuscleGroup, List<ExerciseUiModel>>,
     val isExercisesLoading: Boolean,
-    val hasActiveWorkout: Boolean
+    val hasActiveWorkout: Boolean,
+    val isMuscleBottomSheetOpen: Boolean = false,
+    val availableMuscleGroups: List<MuscleGroup> = emptyList(),
+    val activeMuscleMenuGroup: MuscleGroup? = null
 )
 
 @Immutable

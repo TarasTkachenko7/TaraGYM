@@ -1,6 +1,7 @@
 package com.example.targym.presentation.days.views
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,16 +15,16 @@ import com.example.targym.presentation.days.components.ManageDaysItem
 @Composable
 fun ManageDaysSuccess(
     days: List<WorkoutDay>,
-    editingDayId: Long?,
     onStartEdit: (Long) -> Unit,
-    onSaveEdit: (Long, String) -> Unit,
-    onCancelEdit: () -> Unit,
     onDeleteClick: (WorkoutDay) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(
+            bottom = 96.dp
+        )
     ) {
         items(
             items = days,
@@ -32,10 +33,7 @@ fun ManageDaysSuccess(
             key(day.id) {
                 ManageDaysItem(
                     day = day,
-                    isEditing = editingDayId == day.id,
                     onStartEdit = { onStartEdit(day.id) },
-                    onSaveEdit = { newName -> onSaveEdit(day.id, newName) },
-                    onCancelEdit = onCancelEdit,
                     onDeleteClick = { onDeleteClick(day) }
                 )
             }

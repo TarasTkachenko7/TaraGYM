@@ -17,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.presentation.main.MainUiState
 import com.example.targym.presentation.main.components.DayEmptyState
 import com.example.targym.presentation.main.components.ExercisesList
@@ -31,7 +32,9 @@ fun MainSuccess(
     onRepetitionClick: (Long, Long) -> Unit,
     onMenuClick: () -> Unit,
     onMuscleGroupButton: () -> Unit,
-    onMuscleMenu: () -> Unit,
+    onMenuToggle: (MuscleGroup, Boolean) -> Unit,
+    onAddExerciseClick: (MuscleGroup) -> Unit,
+    onDeleteGroupClick: (MuscleGroup) -> Unit,
     onVideoClick: (Long) -> Unit,
     onEditClick: (Long) -> Unit,
     onFinishWorkoutClick: (Long) -> Unit,
@@ -78,15 +81,16 @@ fun MainSuccess(
                     lazyListState = lazyListState,
                     selectedDayId = uiState.selectedDayId,
                     groupedExercises = uiState.groupedExercises,
+                    activeMuscleMenuGroup = uiState.activeMuscleMenuGroup,
                     hasActiveWorkout = uiState.hasActiveWorkout,
                     onRepetitionClick = onRepetitionClick,
-                    onMuscleMenu = onMuscleMenu,
+                    onMenuToggle = onMenuToggle,
+                    onAddExerciseClick = onAddExerciseClick,
+                    onDeleteGroupClick = onDeleteGroupClick,
                     onVideoClick = onVideoClick,
                     onEditClick = onEditClick,
                     onFinishWorkoutClick = onFinishWorkoutClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
+                    modifier = Modifier.fillMaxWidth().weight(1f)
                 )
             }
         }

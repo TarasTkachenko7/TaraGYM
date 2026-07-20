@@ -2,6 +2,8 @@ package com.example.targym.presentation.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.targym.domain.model.MuscleGroup
+import com.example.targym.domain.model.WorkoutDay
 import com.example.targym.domain.repository.WorkoutRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +14,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.collections.first
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModel(
@@ -20,12 +24,25 @@ class MainViewModel(
 ) : ViewModel() {
     private val _selectedDayId = MutableStateFlow<Long?>(null)
 
+    private val _isMuscleBottomSheetOpen = MutableStateFlow(false)
+    private val _manuallyAddedMuscleGroups = MutableStateFlow<Set<MuscleGroup>>(emptySet())
+    private val _activeMuscleMenuGroup = MutableStateFlow<MuscleGroup?>(null)
+
     val screenState: StateFlow<MainScreenState> = combine(
         repository.getWorkoutDays(),
-        _selectedDayId
-    ) { days, selectedId ->
-        days to selectedId
-    }.flatMapLatest { (days, selectedId) ->
+        _selectedDayId,
+        _isMuscleBottomSheetOpen,
+        _manuallyAddedMuscleGroups,
+        _activeMuscleMenuGroup
+    ) { days, selectedId, isSheetOpen, manualGroups, activeMenu ->
+        listOf(days, selectedId, isSheetOpen, manualGroups, activeMenu)
+    }.flatMapLatest { targetList ->
+        val days = targetList[0] as List<WorkoutDay>
+        val selectedId = targetList[1] as Long?
+        val isSheetOpen = targetList[2] as Boolean
+        val manualGroups = targetList[3] as Set<MuscleGroup>
+        val activeMenu = targetList[4] as MuscleGroup?
+
         if (days.isEmpty()) {
             flowOf(MainScreenState.Empty)
         } else {
@@ -33,7 +50,6 @@ class MainViewModel(
                 ?: days.first().id
 
             repository.getExercisesByWorkoutDay(activeDayId).map { domainExercises ->
-
                 val hasActiveWorkout = domainExercises.any { exercise ->
                     exercise.repetitions.any { it.isDone }
                 }
@@ -56,15 +72,28 @@ class MainViewModel(
                     )
                 }
 
-                val grouped = uiExercises.groupBy { it.muscleGroup }
+                val baseGrouped = uiExercises.groupBy { it.muscleGroup }
+
+                val mutableGrouped = baseGrouped.toMutableMap()
+
+                manualGroups.forEach { manualGroup ->
+                    if (manualGroup !in mutableGrouped) {
+                        mutableGrouped[manualGroup] = emptyList()
+                    }
+                }
+
+                val availableGroups = MuscleGroup.entries.filter { it !in mutableGrouped.keys }
 
                 MainScreenState.Success(
                     uiState = MainUiState(
                         workoutDays = days,
                         selectedDayId = activeDayId,
-                        groupedExercises = grouped,
+                        groupedExercises = mutableGrouped,
                         isExercisesLoading = false,
-                        hasActiveWorkout = hasActiveWorkout
+                        hasActiveWorkout = hasActiveWorkout,
+                        isMuscleBottomSheetOpen = isSheetOpen,
+                        availableMuscleGroups = availableGroups,
+                        activeMuscleMenuGroup = activeMenu
                     )
                 )
             }
@@ -84,7 +113,35 @@ class MainViewModel(
     }
 
     fun selectDay(dayId: Long) {
+        _manuallyAddedMuscleGroups.value = emptySet()
         _selectedDayId.value = dayId
+    }
+
+    fun openMuscleBottomSheet() {
+        _isMuscleBottomSheetOpen.value = true
+    }
+
+    fun closeMuscleBottomSheet() {
+        _isMuscleBottomSheetOpen.value = false
+    }
+
+    fun addMuscleGroup(muscleGroup: MuscleGroup) {
+        _manuallyAddedMuscleGroups.update { it + muscleGroup }
+        closeMuscleBottomSheet()
+    }
+
+    fun openMuscleMenu(muscleGroup: MuscleGroup) {
+        _activeMuscleMenuGroup.value = muscleGroup
+    }
+
+    fun closeMuscleMenu() {
+        _activeMuscleMenuGroup.value = null
+    }
+
+    fun removeMuscleGroup(muscleGroup: MuscleGroup) {
+        _manuallyAddedMuscleGroups.update { it - muscleGroup }
+        closeMuscleMenu()
+        // TODO: В будущем добавить логику удаления упражнений этой группы из репозитория
     }
 
     fun toggleRepetitionCheck(exerciseId: Long, repetitionId: Long) {

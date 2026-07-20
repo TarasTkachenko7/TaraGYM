@@ -11,6 +11,7 @@ import com.example.targym.presentation.days.ManageDaysScreen
 import com.example.targym.presentation.days.ManageDaysViewModel
 import com.example.targym.presentation.main.MainScreen
 import com.example.targym.presentation.main.MainViewModel
+import com.example.targym.presentation.navigation.AppNavHost
 import com.example.targym.ui.theme.TarGYMTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -19,10 +20,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val viewModel: ManageDaysViewModel = koinViewModel()
+            val viewModel: MainViewModel = koinViewModel()
             TarGYMTheme() {
                 Scaffold { innerPadding ->
-                    ManageDaysScreen(viewModel, {} , Modifier.padding(innerPadding))
+                    AppNavHost(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

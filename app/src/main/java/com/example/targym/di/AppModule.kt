@@ -5,7 +5,9 @@ import com.example.targym.domain.repository.WorkoutRepository
 import com.example.targym.presentation.days.ManageDaysViewModel
 import com.example.targym.presentation.edit.EditViewModel
 import com.example.targym.presentation.main.MainViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.viewModel
 
 val appModule = module {
 
@@ -13,15 +15,15 @@ val appModule = module {
         WorkoutRepositoryImpl()
     }
 
-    single {
+    viewModel {
         MainViewModel(get())
     }
 
-    single {
+    viewModel {
         EditViewModel(get())
     }
 
-    single {
+    viewModel {
         ManageDaysViewModel(get())
     }
 
