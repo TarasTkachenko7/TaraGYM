@@ -1,16 +1,21 @@
 package com.example.targym.presentation.edit.views
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,6 +34,10 @@ import com.example.targym.ui.theme.Background
 fun EditSuccess(
     uiState: EditUiState,
     onNavigationClick: () -> Unit,
+    onMoreClick: () -> Unit,
+    onDismissMenu: () -> Unit,
+    onRenameClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     onNameChange: (String) -> Unit,
     onNoteChange: (String) -> Unit,
     onRepetitionChange: (Long, String, String) -> Unit,
@@ -37,25 +46,34 @@ fun EditSuccess(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Scaffold(
-        containerColor = Background,
-        topBar = {
-            EditScreenHeader(
-                title = if (uiState.exerciseId == -1L) stringResource(R.string.add) else stringResource(R.string.edit),
-                onNavigationClick = onNavigationClick
-            )
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = modifier
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Background)
+    ) {
+        Column(
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .statusBarsPadding()
         ) {
+            EditScreenHeader(
+                title = if (uiState.exerciseId == -1L) stringResource(R.string.add) else stringResource(R.string.editing_exercise),
+                isMenuExpanded = uiState.isMenuExpanded,
+                onNavigationClick = onNavigationClick,
+                onMoreClick = onMoreClick,
+                onDismissMenu = onDismissMenu,
+                onRenameClick = onRenameClick,
+                onDeleteClick = onDeleteClick
+            )
+
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(horizontal = 20.dp)
+                    .imePadding(),
+                contentPadding = PaddingValues(bottom = 180.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item {
                     Spacer(modifier = Modifier.height(24.dp))
@@ -91,14 +109,20 @@ fun EditSuccess(
                         noteText = uiState.note,
                         onNoteChange = onNoteChange
                     )
-                    Spacer(modifier = Modifier.height(40.dp))
-                    SaveButton(
-                        onClick = onSaveClick,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            SaveButton(
+                onClick = onSaveClick,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .background(Background)
+                    .padding(24.dp)
+            )
         }
     }
 }

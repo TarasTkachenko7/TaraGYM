@@ -2,7 +2,9 @@ package com.example.targym.presentation.edit.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,23 +28,24 @@ fun SaveButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(0.75f),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Accent,
             contentColor = Black
         ),
-        elevation = null
+        contentPadding = PaddingValues(vertical = 20.dp),
+        modifier = modifier
+            .widthIn(max = 300.dp)
+            .fillMaxWidth()
     ) {
         Text(
             text = stringResource(R.string.save),
             style = TextStyle(
                 fontSize = 16.sp,
                 fontFamily = InterFont,
-                fontWeight = FontWeight.Medium,
-                letterSpacing = 1.sp
-            ),
-            modifier = Modifier.padding(vertical = 8.dp)
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.5.sp
+            )
         )
     }
 }

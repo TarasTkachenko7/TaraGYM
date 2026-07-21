@@ -14,8 +14,8 @@ sealed interface MainUiAction {
     data class ToggleMuscleMenu(val muscleGroup: MuscleGroup, val isOpen: Boolean) : MainUiAction
 
     data object OpenManageDays : MainUiAction
-    data class AddExercise(val muscleGroup: MuscleGroup) : MainUiAction
+    data class AddExercise(val dayId: Long, val muscleGroup: MuscleGroup) : MainUiAction
     data class OpenVideo(val exerciseId: Long) : MainUiAction
-    data class OpenEditExercise(val exerciseId: Long) : MainUiAction
+    data class OpenEditExercise(val exerciseId: Long, val dayId: Long, val muscleGroup: MuscleGroup) : MainUiAction
 
 }

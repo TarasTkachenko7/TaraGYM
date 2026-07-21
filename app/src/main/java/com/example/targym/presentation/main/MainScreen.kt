@@ -66,13 +66,18 @@ fun MainScreen(
                     onMenuClick = { handleAction(MainUiAction.OpenManageDays) },
                     onMuscleGroupButton = { handleAction(MainUiAction.OpenMuscleBottomSheet) },
                     onMenuToggle = { muscleGroup, open -> handleAction(MainUiAction.ToggleMuscleMenu(muscleGroup, open)) },
-                    onAddExerciseClick = { muscleGroup ->
-                        viewModel.closeMuscleMenu()
-                        handleAction(MainUiAction.AddExercise(muscleGroup))
-                    },
+                    onAddExerciseClick = { muscleGroup -> handleAction(MainUiAction.AddExercise(dayId = state.uiState.selectedDayId, muscleGroup)) },
                     onDeleteGroupClick = { muscleGroup -> handleAction(MainUiAction.DeleteMuscleGroup(muscleGroup)) },
                     onVideoClick = { exId -> handleAction(MainUiAction.OpenVideo(exId)) },
-                    onEditClick = { exId -> handleAction(MainUiAction.OpenEditExercise(exId)) },
+                    onEditClick = { exerciseId, muscleGroup ->
+                        handleAction(
+                            MainUiAction.OpenEditExercise(
+                                exerciseId = exerciseId,
+                                dayId = state.uiState.selectedDayId,
+                                muscleGroup = muscleGroup
+                            )
+                        )
+                    },
                     onFinishWorkoutClick = { dayId -> handleAction(MainUiAction.FinishWorkout(dayId)) }
                 )
 

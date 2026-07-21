@@ -35,6 +35,7 @@ import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.Second
 import com.example.targym.ui.theme.SecondText
 import com.example.targym.R
+import com.example.targym.ui.theme.Garbage
 
 @Composable
 fun SetRowItem(
@@ -50,7 +51,7 @@ fun SetRowItem(
         modifier = modifier
             .fillMaxWidth()
             .background(Second, RoundedCornerShape(12.dp))
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+            .padding(14.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -158,7 +159,7 @@ fun SetRowItem(
             Icon(
                 imageVector = Icons.Outlined.Delete,
                 contentDescription = stringResource(R.string.delete_rep),
-                tint = SecondText,
+                tint = Garbage.copy(alpha = 0.5F),
                 modifier = Modifier.size(20.dp)
             )
         }

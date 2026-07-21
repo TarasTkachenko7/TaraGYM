@@ -36,7 +36,7 @@ fun MuscleGroupSection(
     onDeleteGroupClick: () -> Unit,
     onRepetitionClick: (Long, Long) -> Unit,
     onVideoClick: (Long) -> Unit,
-    onEditClick: (Long) -> Unit,
+    onEditClick: (Long, MuscleGroup) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(

@@ -181,4 +181,50 @@ class EditViewModel(
         return currentExerciseConverted != original
     }
 
+    fun toggleMenu(isOpen: Boolean) {
+        _uiState.update { it.copy(isMenuExpanded = isOpen) }
+    }
+
+    fun openRenameDialog() {
+        _uiState.update {
+            it.copy(
+                isMenuExpanded = false,
+                isRenameDialogOpen = true,
+                tempNameInput = it.name
+            )
+        }
+    }
+
+    fun closeRenameDialog() {
+        _uiState.update { it.copy(isRenameDialogOpen = false) }
+    }
+
+    fun onTempNameChanged(newName: String) {
+        _uiState.update { it.copy(tempNameInput = newName) }
+    }
+
+    fun confirmRename() {
+        val newName = _uiState.value.tempNameInput.trim()
+        if (newName.isNotBlank()) {
+            _uiState.update {
+                it.copy(
+                    name = newName,
+                    isRenameDialogOpen = false,
+                    isNameError = false
+                )
+            }
+        }
+    }
+
+    fun deleteExercise() {
+        val state = _uiState.value
+        toggleMenu(false)
+        viewModelScope.launch {
+            if (state.exerciseId != -1L) {
+                repository.deleteExercise(state.exerciseId)
+            }
+            _uiState.update { it.copy(isSaved = true) }
+        }
+    }
+
 }

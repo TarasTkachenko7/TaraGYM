@@ -23,5 +23,8 @@ data class EditUiState(
     val isSaved: Boolean = false,
     val isNameError: Boolean = false,
     val isMuscleGroupError: Boolean = false,
-    @StringRes val errorMessage: Int? = null
+    @StringRes val errorMessage: Int? = null,
+    val isMenuExpanded: Boolean = false,
+    val isRenameDialogOpen: Boolean = false,
+    val tempNameInput: String = ""
 )

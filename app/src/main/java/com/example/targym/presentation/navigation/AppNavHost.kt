@@ -6,8 +6,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.targym.presentation.days.ManageDaysScreen
 import com.example.targym.presentation.days.ManageDaysViewModel
+import com.example.targym.presentation.edit.EditScreen
+import com.example.targym.presentation.edit.EditViewModel
 import com.example.targym.presentation.main.MainScreen
 import com.example.targym.presentation.main.MainUiAction
 import com.example.targym.presentation.main.MainViewModel
@@ -35,16 +38,22 @@ fun AppNavHost(
                             navController.navigate(Screen.ManageDays)
                         }
                         is MainUiAction.AddExercise -> {
-                            // Будущий экран добавления упражнения
+                            navController.navigate(Screen.Edit(
+                                exerciseId = -1L,
+                                dayId = action.dayId,
+                                muscleGroup = action.muscleGroup
+                            ))
                         }
                         is MainUiAction.OpenVideo -> {
                             // Будущий экран видео
                         }
                         is MainUiAction.OpenEditExercise -> {
-                            // Будущий экран редактирования
+                            navController.navigate(Screen.Edit(
+                                exerciseId = action.exerciseId,
+                                dayId = action.dayId,
+                                muscleGroup = action.muscleGroup
+                            ))
                         }
-                        // Все остальные экшены (SelectDay, ToggleRepetition...) сюда
-                        // даже не долетят, их отфильтровал handleAction внутри MainScreen!
                         else -> {}
                     }
                 }
@@ -61,5 +70,21 @@ fun AppNavHost(
                 }
             )
         }
+
+        composable<Screen.Edit> { backStackEntry ->
+            val route: Screen.Edit = backStackEntry.toRoute()
+            val viewModel: EditViewModel = koinViewModel()
+
+            EditScreen(
+                viewModel = viewModel,
+                exerciseId = route.exerciseId,
+                dayId = route.dayId,
+                muscleGroup = route.muscleGroup,
+                onNavigationClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
     }
 }
