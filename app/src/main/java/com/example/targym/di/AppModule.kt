@@ -4,6 +4,7 @@ import com.example.targym.data.impl.WorkoutRepositoryImpl
 import com.example.targym.domain.repository.WorkoutRepository
 import com.example.targym.presentation.days.ManageDaysViewModel
 import com.example.targym.presentation.edit.EditViewModel
+import com.example.targym.presentation.gif.GifViewModel
 import com.example.targym.presentation.main.MainViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -25,6 +26,10 @@ val appModule = module {
 
     viewModel {
         ManageDaysViewModel(get())
+    }
+
+    viewModel { (exerciseId: Long) ->
+        GifViewModel(exerciseId, get())
     }
 
 }

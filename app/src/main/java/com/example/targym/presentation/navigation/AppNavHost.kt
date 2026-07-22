@@ -11,10 +11,13 @@ import com.example.targym.presentation.days.ManageDaysScreen
 import com.example.targym.presentation.days.ManageDaysViewModel
 import com.example.targym.presentation.edit.EditScreen
 import com.example.targym.presentation.edit.EditViewModel
+import com.example.targym.presentation.gif.GifScreen
+import com.example.targym.presentation.gif.GifViewModel
 import com.example.targym.presentation.main.MainScreen
 import com.example.targym.presentation.main.MainUiAction
 import com.example.targym.presentation.main.MainViewModel
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun AppNavHost(
@@ -45,7 +48,9 @@ fun AppNavHost(
                             ))
                         }
                         is MainUiAction.OpenVideo -> {
-                            // Будущий экран видео
+                            navController.navigate(Screen.OpenGif(
+                                action.exerciseId
+                            ))
                         }
                         is MainUiAction.OpenEditExercise -> {
                             navController.navigate(Screen.Edit(
@@ -83,6 +88,16 @@ fun AppNavHost(
                 onNavigationClick = {
                     navController.popBackStack()
                 }
+            )
+        }
+
+        composable<Screen.OpenGif> { backStackEntry ->
+            val route: Screen.OpenGif = backStackEntry.toRoute()
+            val viewModel: GifViewModel = koinViewModel { parametersOf(route.exerciseId) }
+
+            GifScreen(
+                viewModel = viewModel,
+                onDismiss = { navController.popBackStack() }
             )
         }
 

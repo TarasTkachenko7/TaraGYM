@@ -18,4 +18,9 @@ sealed interface Screen {
         val muscleGroup: MuscleGroup
     ) : Screen
 
+    @Serializable
+    data class OpenGif(
+        val exerciseId: Long
+    ) : Screen
+
 }
