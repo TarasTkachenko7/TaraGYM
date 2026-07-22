@@ -16,6 +16,7 @@ interface WorkoutRepository {
     suspend fun saveExercise(exercise: Exercise)
     suspend fun deleteExercise(exerciseId: Long)
     suspend fun deleteExercisesByMuscleGroup(workoutDayId: Long, muscleGroup: MuscleGroup)
+    fun getExerciseById(exerciseId: Long): Flow<Exercise?>
 
     suspend fun toggleRepetitionDone(exerciseId: Long, repetitionId: Long)
     suspend fun resetAllDoneFlags(workoutDayId: Long)

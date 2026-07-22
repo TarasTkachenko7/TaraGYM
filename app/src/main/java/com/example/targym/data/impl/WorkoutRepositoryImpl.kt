@@ -7,6 +7,7 @@ import com.example.targym.domain.model.WorkoutDay
 import com.example.targym.domain.repository.WorkoutRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
@@ -91,6 +92,12 @@ class WorkoutRepositoryImpl : WorkoutRepository {
     override suspend fun deleteExercisesByMuscleGroup(workoutDayId: Long, muscleGroup: MuscleGroup) {
         _exercises.update { allExercises ->
             allExercises.filterNot { it.workoutDayId == workoutDayId && it.muscleGroup == muscleGroup }
+        }
+    }
+
+    override fun getExerciseById(exerciseId: Long): Flow<Exercise?> {
+        return _exercises.map { allExercises ->
+            allExercises.find { it.id == exerciseId }
         }
     }
 
