@@ -27,7 +27,7 @@ fun RepetitionsHeader(
         Text(
             text = stringResource(R.string.reps),
             style = TextStyle(
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 color = SecondText,
                 fontWeight = FontWeight.Medium,
                 fontFamily = InterFont,
@@ -38,9 +38,9 @@ fun RepetitionsHeader(
         Text(
             text = stringResource(R.string.kg_reps),
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 color = SecondText,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.5.sp,
                 fontFamily = InterFont
             ),

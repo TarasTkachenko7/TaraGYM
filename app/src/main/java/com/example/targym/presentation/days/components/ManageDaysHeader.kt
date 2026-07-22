@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.targym.R
 import com.example.targym.ui.theme.Background
+import com.example.targym.ui.theme.DialogBoxTextStyle
 import com.example.targym.ui.theme.FirstText
 import com.example.targym.ui.theme.InterFont
 
@@ -57,12 +58,7 @@ fun ManageDaysHeader(
 
         Text(
             text = stringResource(R.string.edit_days_title),
-            style = TextStyle(
-                fontSize = 18.sp,
-                color = FirstText,
-                fontFamily = InterFont,
-                fontWeight = FontWeight.SemiBold
-            )
+            style = DialogBoxTextStyle
         )
     }
 }

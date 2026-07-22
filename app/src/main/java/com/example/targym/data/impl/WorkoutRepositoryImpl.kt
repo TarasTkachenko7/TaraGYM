@@ -1,8 +1,8 @@
 package com.example.targym.data.impl
 
 import com.example.targym.data.Storage
-import com.example.targym.domain.model.Advice
 import com.example.targym.domain.model.Exercise
+import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.domain.model.WorkoutDay
 import com.example.targym.domain.repository.WorkoutRepository
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,6 @@ class WorkoutRepositoryImpl : WorkoutRepository {
 
     private val _days = MutableStateFlow<List<WorkoutDay>>(Storage.mockDays)
     private val _exercises = MutableStateFlow<List<Exercise>>(Storage.mockExercises)
-    private val _advices = MutableStateFlow<List<Advice>>(Storage.mockAdvice)
 
     override fun getWorkoutDays(): Flow<List<WorkoutDay>> {
         return _days
@@ -34,10 +33,6 @@ class WorkoutRepositoryImpl : WorkoutRepository {
     }
 
     override suspend fun deleteWorkoutDay(workoutDayId: Long) {
-        val exerciseIdsToDelete = _exercises.value
-            .filter { it.workoutDayId == workoutDayId }
-            .map { it.id }
-
         _days.update { allDays ->
             allDays.filter { day ->
                 day.id != workoutDayId
@@ -47,12 +42,6 @@ class WorkoutRepositoryImpl : WorkoutRepository {
         _exercises.update { allExercises ->
             allExercises.filter { exercise ->
                 exercise.workoutDayId != workoutDayId
-            }
-        }
-
-        _advices.update { allAdvices ->
-            allAdvices.filter { advice ->
-                advice.exerciseId !in exerciseIdsToDelete
             }
         }
     }
@@ -97,26 +86,11 @@ class WorkoutRepositoryImpl : WorkoutRepository {
         _exercises.update { allExercises ->
             allExercises.filter { it.id != exerciseId }
         }
-
-        _advices.update { allAdvices ->
-            allAdvices.filter { it.exerciseId != exerciseId }
-        }
     }
 
-    override fun getAdvicesForExercise(exerciseId: Long): Flow<List<Advice>> {
-        return _advices.map { allAdvices -> allAdvices.filter { it.exerciseId == exerciseId } }
-    }
-
-    override suspend fun addAdvice(advice: Advice) {
-        _advices.update { allAdvices ->
-            val newId = System.currentTimeMillis()
-            allAdvices + advice.copy(id = newId)
-        }
-    }
-
-    override suspend fun deleteAdvice(adviceId: Long) {
-        _advices.update { allAdvices ->
-            allAdvices.filter { it.id != adviceId }
+    override suspend fun deleteExercisesByMuscleGroup(workoutDayId: Long, muscleGroup: MuscleGroup) {
+        _exercises.update { allExercises ->
+            allExercises.filterNot { it.workoutDayId == workoutDayId && it.muscleGroup == muscleGroup }
         }
     }
 

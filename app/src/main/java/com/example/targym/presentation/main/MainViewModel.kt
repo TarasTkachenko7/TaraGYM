@@ -27,26 +27,32 @@ class MainViewModel(
     private val _isMuscleBottomSheetOpen = MutableStateFlow(false)
     private val _manuallyAddedMuscleGroups = MutableStateFlow<Set<MuscleGroup>>(emptySet())
     private val _activeMuscleMenuGroup = MutableStateFlow<MuscleGroup?>(null)
+    private val _muscleGroupPendingDeletion = MutableStateFlow<MuscleGroup?>(null)
 
     val screenState: StateFlow<MainScreenState> = combine(
         repository.getWorkoutDays(),
         _selectedDayId,
         _isMuscleBottomSheetOpen,
         _manuallyAddedMuscleGroups,
-        _activeMuscleMenuGroup
-    ) { days, selectedId, isSheetOpen, manualGroups, activeMenu ->
-        listOf(days, selectedId, isSheetOpen, manualGroups, activeMenu)
-    }.flatMapLatest { targetList ->
-        val days = targetList[0] as List<WorkoutDay>
-        val selectedId = targetList[1] as Long?
-        val isSheetOpen = targetList[2] as Boolean
-        val manualGroups = targetList[3] as Set<MuscleGroup>
-        val activeMenu = targetList[4] as MuscleGroup?
+        _activeMuscleMenuGroup,
+        _muscleGroupPendingDeletion
+    ) { flowsArray ->
+        val days = flowsArray[0] as List<WorkoutDay>
+        val selectedId = flowsArray[1] as Long?
+        val isSheetOpen = flowsArray[2] as Boolean
+        @Suppress("UNCHECKED_CAST")
+        val manualGroups = flowsArray[3] as Set<MuscleGroup>
+        val activeMenu = flowsArray[4] as MuscleGroup?
+        val pendingDelete = flowsArray[5] as MuscleGroup?
+
+        CombineParams(days, selectedId, isSheetOpen, manualGroups, activeMenu, pendingDelete)
+    }.flatMapLatest { params ->
+        val days = params.days
 
         if (days.isEmpty()) {
             flowOf(MainScreenState.Empty)
         } else {
-            val activeDayId = selectedId?.takeIf { id -> days.any { it.id == id } }
+            val activeDayId = params.selectedId?.takeIf { id -> days.any { it.id == id } }
                 ?: days.first().id
 
             repository.getExercisesByWorkoutDay(activeDayId).map { domainExercises ->
@@ -73,10 +79,9 @@ class MainViewModel(
                 }
 
                 val baseGrouped = uiExercises.groupBy { it.muscleGroup }
-
                 val mutableGrouped = baseGrouped.toMutableMap()
 
-                manualGroups.forEach { manualGroup ->
+                params.manualGroups.forEach { manualGroup ->
                     if (manualGroup !in mutableGrouped) {
                         mutableGrouped[manualGroup] = emptyList()
                     }
@@ -91,9 +96,10 @@ class MainViewModel(
                         groupedExercises = mutableGrouped,
                         isExercisesLoading = false,
                         hasActiveWorkout = hasActiveWorkout,
-                        isMuscleBottomSheetOpen = isSheetOpen,
+                        isMuscleBottomSheetOpen = params.isSheetOpen,
                         availableMuscleGroups = availableGroups,
-                        activeMuscleMenuGroup = activeMenu
+                        activeMuscleMenuGroup = params.activeMenu,
+                        muscleGroupPendingDeletion = params.pendingDelete
                     )
                 )
             }
@@ -139,9 +145,27 @@ class MainViewModel(
     }
 
     fun removeMuscleGroup(muscleGroup: MuscleGroup) {
-        _manuallyAddedMuscleGroups.update { it - muscleGroup }
+        requestDeleteMuscleGroup(muscleGroup)
+    }
+
+    fun requestDeleteMuscleGroup(muscleGroup: MuscleGroup) {
         closeMuscleMenu()
-        // TODO: В будущем добавить логику удаления упражнений этой группы из репозитория
+        _muscleGroupPendingDeletion.value = muscleGroup
+    }
+
+    fun dismissDeleteMuscleGroupDialog() {
+        _muscleGroupPendingDeletion.value = null
+    }
+
+    fun confirmDeleteMuscleGroup() {
+        val groupToDelete = _muscleGroupPendingDeletion.value ?: return
+        val currentDayId = (screenState.value as? MainScreenState.Success)?.uiState?.selectedDayId ?: return
+
+        viewModelScope.launch {
+            repository.deleteExercisesByMuscleGroup(currentDayId, groupToDelete)
+            _manuallyAddedMuscleGroups.update { it - groupToDelete }
+            dismissDeleteMuscleGroupDialog()
+        }
     }
 
     fun toggleRepetitionCheck(exerciseId: Long, repetitionId: Long) {
@@ -156,4 +180,12 @@ class MainViewModel(
         }
     }
 
+    private data class CombineParams(
+        val days: List<WorkoutDay>,
+        val selectedId: Long?,
+        val isSheetOpen: Boolean,
+        val manualGroups: Set<MuscleGroup>,
+        val activeMenu: MuscleGroup?,
+        val pendingDelete: MuscleGroup?
+    )
 }

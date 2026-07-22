@@ -20,7 +20,8 @@ data class MainUiState(
     val hasActiveWorkout: Boolean,
     val isMuscleBottomSheetOpen: Boolean = false,
     val availableMuscleGroups: List<MuscleGroup> = emptyList(),
-    val activeMuscleMenuGroup: MuscleGroup? = null
+    val activeMuscleMenuGroup: MuscleGroup? = null,
+    val muscleGroupPendingDeletion: MuscleGroup? = null
 )
 
 @Immutable

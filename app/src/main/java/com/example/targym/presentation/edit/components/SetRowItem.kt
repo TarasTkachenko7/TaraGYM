@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,7 @@ import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.Second
 import com.example.targym.ui.theme.SecondText
 import com.example.targym.R
+import com.example.targym.ui.theme.Garbage
 
 @Composable
 fun SetRowItem(
@@ -50,7 +52,7 @@ fun SetRowItem(
         modifier = modifier
             .fillMaxWidth()
             .background(Second, RoundedCornerShape(12.dp))
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+            .padding(14.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -84,7 +86,10 @@ fun SetRowItem(
                         fontFamily = InterFont,
                         textAlign = TextAlign.Center
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
                     cursorBrush = SolidColor(Accent),
                     decorationBox = { innerTextField ->
                         Box(contentAlignment = Alignment.Center) {
@@ -127,7 +132,10 @@ fun SetRowItem(
                         fontFamily = InterFont,
                         textAlign = TextAlign.Center
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
                     cursorBrush = SolidColor(Accent),
                     decorationBox = { innerTextField ->
                         Box(contentAlignment = Alignment.Center) {
@@ -158,7 +166,7 @@ fun SetRowItem(
             Icon(
                 imageVector = Icons.Outlined.Delete,
                 contentDescription = stringResource(R.string.delete_rep),
-                tint = SecondText,
+                tint = Garbage.copy(alpha = 0.5F),
                 modifier = Modifier.size(20.dp)
             )
         }

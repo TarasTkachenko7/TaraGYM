@@ -18,13 +18,30 @@
     <string name="empty_day">Тренировочный день пуст</string>
     <string name="add_first_muscle">Добавьте первую группу мышц, чтобы начать планирование</string>
 
+    <!--    MainSuccess    -->
+    <string name="select_muscle">Выберите группу мышц</string>
+    <string name="add_first_exercise">Добавьте первое упражнение</string>
+    <string name="all_muscle_groups_already_on_screen">Вы уже добавили все доступные группы мышц на этот тренировочный день</string>
+    <string name="understand">ПОНЯТНО</string>
+    <string name="delete_muscle">Удалить мышечную группу</string>
+    <string name="add_exercise">Добавить упражнение</string>
+    <string name="muscle_info">Информация о группе мышц</string>
+    <string name="x_info">Вес и повторения</string>
+    <string name="completed">выполнено</string>
+    <string name="not_completed">не выполнено</string>
+    <string name="days_list">список дней</string>
+    <string name="finish_training">ЗАВЕРШИТЬ ТРЕНИРОВКУ</string>
+    <string name="edit_exercise">Редактировать упражнение</string>
+    <string name="delete_muscle_group_title">Удалить группу мышц?</string>
+    <string name="delete_muscle_group_confirm">Вы действительно хотите удалить группу \"%1$s\" и все входящие в нее упражнения?</string>
+
     <!--    ManageDays    -->
     <string name="adding_a_training_day">ДОБАВИТЬ ТРЕНИРОВКУ</string>
     <string name="backstack">Назад</string>
     <string name="edit_days_title">Редактирование дней</string>
     <string name="delete">Удалить</string>
     <string name="edit">Редактировать</string>
-    <string name="no_days_yet">Тренировок пока нет</string>
+    <string name="no_days_yet">Добавьте первую тренировку</string>
     <string name="enter_the_name">Введите название</string>
     <string name="save_lower">Сохранить</string>
     <string name="adding_a_training_day_lower">Добавить тренировку</string>
@@ -33,38 +50,34 @@
     <string name="delete_day_confirm">Вы уверены, что хотите удалить день \"%1$s\" ?</string>
     <string name="cancel">Отмена</string>
     <string name="error_duplicate_day_name">День с таким названием уже существует</string>
+    <string name="error_empty_name">Название не может быть пустым</string>
 
-    <string name="new_exercise">Новое упражнение</string>
-    <string name="add">Добавить</string>
-    <string name="kg">кг</string>
-    <string name="x">x</string>
-    <string name="x_info">Вес и повторения</string>
-    <string name="delete_rep">Удалить подход</string>
-    <string name="save">СОХРАНИТЬ</string>
+    <!--    EditScreen    -->
+    <string name="add_rep">Добавить подход</string>
+    <string name="exercise">УПРАЖНЕНИЕ</string>
     <string name="add_details">Добавьте детали выполнения...</string>
     <string name="notes">Заметки</string>
-    <string name="add_rep">Добавить подход</string>
+    <string name="save">СОХРАНИТЬ</string>
     <string name="kg_reps">КГ / ПОВТОРЫ</string>
     <string name="reps">Подходы</string>
-    <string name="exercise">УПРАЖНЕНИЕ</string>
-    <string name="finish_training">ЗАВЕРШИТЬ ТРЕНИРОВКУ</string>
+    <string name="kg">кг</string>
+    <string name="x">x</string>
+    <string name="delete_rep">Удалить подход</string>
+    <string name="add">Добавить</string>
+    <string name="editing_exercise">Редактировать</string>
+    <string name="new_exercise">Новое упражнение</string>
     <string name="muscle_group">Группа мышц</string>
     <string name="watch_technique">Смотреть технику выполнения</string>
-    <string name="edit_exercise">Редактировать упражнение</string>
-    <string name="muscle_info">Информация о группе мышц</string>
-    <string name="add_a_muscle_group">ДОБАВИТЬ ГРУППУ МЫШЦ</string>
-    <string name="days_list">список дней</string>
-    <string name="completed">выполнено</string>
-    <string name="not_completed">не выполнено</string>
-    <string name="error_empty_name">Название не может быть пустым</string>
     <string name="error_empty_reps">Добавьте хотя бы один подход</string>
     <string name="error_not_found">Упражнение не найдено</string>
     <string name="error_empty_muscle_group">Мышечная группа не найдена</string>
-    <string name="new_day">Новый день</string>
-    <string name="select_muscle">Выберите группу мышц</string>
-    <string name="add_first_exercise">Добавьте первое упражнение</string>
-    <string name="all_muscle_groups_already_on_screen">Вы уже добавили все доступные группы мышц на этот тренировочный день</string>
-    <string name="understand">ПОНЯТНО</string>
-    <string name="delete_muscle">Удалить мышечную группу</string>
-    <string name="add_exercise">Добавить упражнение</string>
+    <string name="info">Информация</string>
+    <string name="delete_exercise">Удалить упражнение</string>
+    <string name="change_name">Изменить имя</string>
+    <string name="unsaved_changes_title">Несохраненные изменения</string>
+    <string name="unsaved_changes_message">У вас есть несохраненные изменения. Вы уверены, что хотите выйти?</string>
+    <string name="exit_without_saving">Выйти</string>
+    <string name="delete_exercise_title">Удаление упражнения</string>
+    <string name="delete_exercise_confirm">Вы действительно хотите удалить упражнение?</string>
+
 </resources>

@@ -20,7 +20,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.targym.R
+import com.example.targym.ui.theme.BigHintTextStyle
 import com.example.targym.ui.theme.FirstText
+import com.example.targym.ui.theme.HintTextStyle
 import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.SecondText
 
@@ -44,12 +46,7 @@ fun DayEmptyState(
 
         Text(
             text = stringResource(R.string.empty_day),
-            style = TextStyle(
-                fontSize = 24.sp,
-                color = FirstText,
-                fontFamily = InterFont,
-                fontWeight = FontWeight.SemiBold
-            ),
+            style = BigHintTextStyle,
             modifier = Modifier.widthIn(max = 320.dp),
             textAlign = TextAlign.Center
         )
@@ -58,13 +55,7 @@ fun DayEmptyState(
 
         Text(
             text = stringResource(R.string.add_first_muscle),
-            style = TextStyle(
-                fontSize = 14.sp,
-                color = SecondText,
-                fontFamily = InterFont,
-                fontWeight = FontWeight.Normal,
-                lineHeight = 20.sp
-            ),
+            style = HintTextStyle,
             modifier = Modifier.widthIn(max = 280.dp),
             textAlign = TextAlign.Center
         )

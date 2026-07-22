@@ -49,7 +49,7 @@ fun AddRepetitionButton(
                 indication = ripple(bounded = true),
                 role = Role.Button
             )
-            .padding(vertical = 16.dp),
+            .padding(vertical = 18.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -67,7 +67,7 @@ fun AddRepetitionButton(
                 text = stringResource(R.string.add_rep),
                 style = TextStyle(
                     color = SecondText,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontFamily = InterFont,
                     fontWeight = FontWeight.Medium
                 )

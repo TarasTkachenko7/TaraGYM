@@ -21,7 +21,14 @@ data class EditUiState(
     val repetitions: List<RepetitionInputState> = emptyList(),
     val isLoading: Boolean = true,
     val isSaved: Boolean = false,
+    val isSaveEnabled: Boolean = false,
+    val showExitConfirmationDialog: Boolean = false,
+    val isNewExercise: Boolean = false,
+    val isDeleteConfirmationOpen: Boolean = false,
     val isNameError: Boolean = false,
     val isMuscleGroupError: Boolean = false,
-    @StringRes val errorMessage: Int? = null
+    @StringRes val errorMessage: Int? = null,
+    val isMenuExpanded: Boolean = false,
+    val isRenameDialogOpen: Boolean = false,
+    val tempNameInput: String = ""
 )

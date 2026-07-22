@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.presentation.main.ExerciseUiModel
 import com.example.targym.presentation.main.components.buttons.EditButton
 import com.example.targym.ui.theme.Background
@@ -25,7 +26,7 @@ fun ExerciseCard(
     exercise: ExerciseUiModel,
     onRepetitionClick: (Long, Long) -> Unit,
     onVideoClick: (Long) -> Unit,
-    onEditClick: (Long) -> Unit,
+    onEditClick: (Long, MuscleGroup) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -63,7 +64,7 @@ fun ExerciseCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         EditButton(
-            onClick = { onEditClick(exercise.id) },
+            onClick = { onEditClick(exercise.id, exercise.muscleGroup) },
             modifier = Modifier.align(Alignment.End)
         )
     }

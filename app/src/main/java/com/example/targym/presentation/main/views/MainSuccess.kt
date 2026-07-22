@@ -36,7 +36,7 @@ fun MainSuccess(
     onAddExerciseClick: (MuscleGroup) -> Unit,
     onDeleteGroupClick: (MuscleGroup) -> Unit,
     onVideoClick: (Long) -> Unit,
-    onEditClick: (Long) -> Unit,
+    onEditClick: (Long, MuscleGroup) -> Unit,
     onFinishWorkoutClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {

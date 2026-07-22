@@ -38,7 +38,7 @@ fun EditButton(
                 indication = ripple(bounded = true),
                 role = Role.Button
             )
-            .padding(vertical = 8.dp, horizontal = 48.dp),
+            .padding(vertical = 10.dp, horizontal = 48.dp),
         contentAlignment = Alignment.Center
     ) {
         Icon(
