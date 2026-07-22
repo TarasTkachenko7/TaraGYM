@@ -32,6 +32,8 @@
     <string name="days_list">список дней</string>
     <string name="finish_training">ЗАВЕРШИТЬ ТРЕНИРОВКУ</string>
     <string name="edit_exercise">Редактировать упражнение</string>
+    <string name="delete_muscle_group_title">Удалить группу мышц?</string>
+    <string name="delete_muscle_group_confirm">Вы действительно хотите удалить группу \"%1$s\" и все входящие в нее упражнения?</string>
 
     <!--    ManageDays    -->
     <string name="adding_a_training_day">ДОБАВИТЬ ТРЕНИРОВКУ</string>
@@ -39,7 +41,7 @@
     <string name="edit_days_title">Редактирование дней</string>
     <string name="delete">Удалить</string>
     <string name="edit">Редактировать</string>
-    <string name="no_days_yet">Тренировок пока нет</string>
+    <string name="no_days_yet">Добавьте первую тренировку</string>
     <string name="enter_the_name">Введите название</string>
     <string name="save_lower">Сохранить</string>
     <string name="adding_a_training_day_lower">Добавить тренировку</string>
@@ -72,5 +74,10 @@
     <string name="info">Информация</string>
     <string name="delete_exercise">Удалить упражнение</string>
     <string name="change_name">Изменить имя</string>
+    <string name="unsaved_changes_title">Несохраненные изменения</string>
+    <string name="unsaved_changes_message">У вас есть несохраненные изменения. Вы уверены, что хотите выйти?</string>
+    <string name="exit_without_saving">Выйти</string>
+    <string name="delete_exercise_title">Удаление упражнения</string>
+    <string name="delete_exercise_confirm">Вы действительно хотите удалить упражнение?</string>
 
 </resources>

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.targym.R
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.Black
+import com.example.targym.ui.theme.ButtonsTextStyle
 import com.example.targym.ui.theme.InterFont
 
 @Composable
@@ -38,12 +39,7 @@ fun FinishWorkoutButton(
     ) {
         Text(
             text = stringResource(R.string.finish_training),
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontFamily = InterFont,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 0.5.sp
-            )
+            style = ButtonsTextStyle
         )
     }
 }

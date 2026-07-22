@@ -32,6 +32,7 @@ import com.example.targym.presentation.days.views.ManageDaysEmpty
 import com.example.targym.presentation.days.views.ManageDaysSuccess
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.Background
+import com.example.targym.ui.theme.DialogBoxTextStyle
 import com.example.targym.ui.theme.FirstText
 import com.example.targym.ui.theme.Garbage
 import com.example.targym.ui.theme.InterFont
@@ -126,12 +127,7 @@ private fun InputDialog(
         title = {
             Text(
                 text = title,
-                style = TextStyle(
-                    color = FirstText,
-                    fontFamily = InterFont,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp
-                )
+                style = DialogBoxTextStyle
             )
         },
         text = {
@@ -152,7 +148,7 @@ private fun InputDialog(
                             fontSize = 16.sp,
                             color = FirstText
                         ),
-                        cursorBrush = SolidColor(FirstText),
+                        cursorBrush = SolidColor(Accent),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -209,12 +205,7 @@ private fun DeleteConfirmationDialog(
         title = {
             Text(
                 text = stringResource(R.string.delete_day_title),
-                style = TextStyle(
-                    color = FirstText,
-                    fontFamily = InterFont,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp
-                )
+                style = DialogBoxTextStyle
             )
         },
         text = {
@@ -228,14 +219,17 @@ private fun DeleteConfirmationDialog(
             TextButton(onClick = onConfirm) {
                 Text(
                     text = stringResource(R.string.delete),
-                    color = Accent,
+                    color = Garbage.copy(alpha = 0.8F),
                     fontWeight = FontWeight.Bold
                 )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.cancel), color = SecondText)
+                Text(
+                    text = stringResource(R.string.cancel),
+                    color = SecondText
+                )
             }
         }
     )

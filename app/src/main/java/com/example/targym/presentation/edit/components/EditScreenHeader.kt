@@ -132,7 +132,7 @@ fun EditScreenHeader(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = stringResource(R.string.delete),
+                            text = stringResource(R.string.delete_exercise),
                             style = TextStyle(
                                 fontFamily = InterFont,
                                 fontSize = 15.sp,

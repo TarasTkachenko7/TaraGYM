@@ -9,7 +9,6 @@ import com.example.targym.domain.repository.WorkoutRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import com.example.targym.R
 import kotlinx.coroutines.flow.firstOrNull
@@ -24,22 +23,39 @@ class EditViewModel(
 
     private var originalExercise: Exercise? = null
 
-    fun initExercise(exerciseId: Long, dayId: Long, muscleGroup: MuscleGroup) {
+    fun initExercise(exerciseId: Long, dayId: Long, muscleGroup: MuscleGroup, defaultName: String) {
         if (_uiState.value.dayId != -1L) return
 
         viewModelScope.launch {
             if (exerciseId == -1L) {
+                val initialRepetition = RepetitionInputState(
+                    id = System.currentTimeMillis(),
+                    weight = "",
+                    quantity = ""
+                )
+
                 originalExercise = Exercise(
                     id = -1L,
                     workoutDayId = dayId,
                     muscleGroup = muscleGroup,
-                    name = "",
+                    name = defaultName,
                     repetitions = emptyList(),
                     note = null
                 )
+
                 _uiState.update {
-                    it.copy(dayId = dayId, muscleGroup = muscleGroup, isLoading = false)
+                    it.copy(
+                        exerciseId = -1L,
+                        dayId = dayId,
+                        muscleGroup = muscleGroup,
+                        name = defaultName,
+                        repetitions = listOf(initialRepetition),
+                        isNewExercise = true,
+                        isLoading = false
+                    )
                 }
+                recalculateSaveEnabled()
+
             } else {
                 val exercises = repository.getExercisesByWorkoutDay(dayId).firstOrNull() ?: emptyList()
                 val exercise = exercises.find { it.id == exerciseId }
@@ -56,16 +72,24 @@ class EditViewModel(
                             repetitions = exercise.repetitions.map { rep ->
                                 RepetitionInputState(
                                     id = rep.id,
-                                    weight = if (rep.weight % 1 == 0.0) rep.weight.toInt().toString() else rep.weight.toString(),
-                                    quantity = rep.quantity.toString()
+                                    weight = if (rep.weight == 0.0) "" else if (rep.weight % 1 == 0.0) rep.weight.toInt().toString() else rep.weight.toString(),
+                                    quantity = if (rep.quantity == 0) "" else rep.quantity.toString()
                                 )
                             },
+                            isNewExercise = false,
                             isLoading = false
                         )
                     }
+                    recalculateSaveEnabled()
+
                 } else {
                     _uiState.update {
-                        it.copy(dayId = dayId, muscleGroup = muscleGroup, errorMessage = R.string.error_not_found, isLoading = false)
+                        it.copy(
+                            dayId = dayId,
+                            muscleGroup = muscleGroup,
+                            errorMessage = R.string.error_not_found,
+                            isLoading = false
+                        )
                     }
                 }
             }
@@ -74,10 +98,12 @@ class EditViewModel(
 
     fun onNameChange(newName: String) {
         _uiState.update { it.copy(name = newName, isNameError = false) }
+        recalculateSaveEnabled()
     }
 
     fun onNoteChange(newNote: String) {
         _uiState.update { it.copy(note = newNote) }
+        recalculateSaveEnabled()
     }
 
     fun onRepetitionChange(repId: Long, weightStr: String, repsStr: String) {
@@ -93,6 +119,7 @@ class EditViewModel(
             }
             state.copy(repetitions = updated)
         }
+        recalculateSaveEnabled()
     }
 
     fun addRepetition() {
@@ -102,7 +129,7 @@ class EditViewModel(
                 weight = "",
                 quantity = ""
             )
-            state.copy(repetitions = state.repetitions + newRepetition)
+            state.copy(repetitions = state.repetitions + newRepetition, isSaveEnabled = true)
         }
     }
 
@@ -110,38 +137,34 @@ class EditViewModel(
         _uiState.update { state ->
             state.copy(repetitions = state.repetitions.filterNot { it.id == repId })
         }
+        recalculateSaveEnabled()
+    }
+
+    private fun recalculateSaveEnabled() {
+        val state = _uiState.value
+        val isNameValid = state.name.isNotBlank()
+        val hasRepetitions = state.repetitions.isNotEmpty()
+        val hasChanges = hasUnsavedChanges()
+
+        val isEnabled = isNameValid && hasRepetitions && hasChanges
+        _uiState.update { it.copy(isSaveEnabled = isEnabled) }
     }
 
     fun saveExercise() {
         val state = _uiState.value
 
-        val isNameInvalid = state.name.isBlank()
-        val isMuscleGroupInvalid = state.muscleGroup == null
+        if (!state.isSaveEnabled) return
 
-        if (isNameInvalid || isMuscleGroupInvalid) {
-            _uiState.update {
-                it.copy(
-                    isNameError = isNameInvalid,
-                    isMuscleGroupError = isMuscleGroupInvalid,
-                    errorMessage = if (isNameInvalid) R.string.error_empty_name else R.string.error_empty_muscle_group
-                )
-            }
-            return
-        }
-
-        val domainRepetitions = state.repetitions.mapNotNull { rep ->
-            val weight = rep.weight.toDoubleOrNull()
-            val quantity = rep.quantity.toIntOrNull()
-            if (weight != null && quantity != null) {
-                Repetition(id = rep.id, exerciseId = state.exerciseId, weight = weight, quantity = quantity, isDone = false)
-            } else {
-                null
-            }
-        }
-
-        if (domainRepetitions.isEmpty()) {
-            _uiState.update { it.copy(errorMessage = R.string.error_empty_reps) }
-            return
+        val domainRepetitions = state.repetitions.map { rep ->
+            val weight = rep.weight.toDoubleOrNull() ?: 0.0
+            val quantity = rep.quantity.toIntOrNull() ?: 0
+            Repetition(
+                id = rep.id,
+                exerciseId = state.exerciseId,
+                weight = weight,
+                quantity = quantity,
+                isDone = false
+            )
         }
 
         viewModelScope.launch {
@@ -160,8 +183,8 @@ class EditViewModel(
     }
 
     fun hasUnsavedChanges(): Boolean {
-        val original = originalExercise ?: return false
         val current = _uiState.value
+        val original = originalExercise ?: return current.name.isNotBlank() || current.repetitions.isNotEmpty()
 
         val currentDomainRepetitions = current.repetitions.map { rep ->
             val weight = rep.weight.toDoubleOrNull() ?: 0.0
@@ -179,6 +202,48 @@ class EditViewModel(
         )
 
         return currentExerciseConverted != original
+    }
+
+    fun onBackRequested(onConfirmNavigate: () -> Unit) {
+        if (hasUnsavedChanges()) {
+            _uiState.update { it.copy(showExitConfirmationDialog = true) }
+        } else {
+            onConfirmNavigate()
+        }
+    }
+
+    fun dismissExitDialog() {
+        _uiState.update { it.copy(showExitConfirmationDialog = false) }
+    }
+
+    fun confirmExitWithoutSaving(onConfirmNavigate: () -> Unit) {
+        dismissExitDialog()
+        onConfirmNavigate()
+    }
+
+    fun openDeleteConfirmationDialog() {
+        _uiState.update {
+            it.copy(
+                isMenuExpanded = false,
+                isDeleteConfirmationOpen = true
+            )
+        }
+    }
+
+    fun closeDeleteConfirmationDialog() {
+        _uiState.update { it.copy(isDeleteConfirmationOpen = false) }
+    }
+
+    fun confirmDeleteExercise() {
+        val state = _uiState.value
+        closeDeleteConfirmationDialog()
+
+        viewModelScope.launch {
+            if (state.exerciseId != -1L) {
+                repository.deleteExercise(state.exerciseId)
+            }
+            _uiState.update { it.copy(isSaved = true) }
+        }
     }
 
     fun toggleMenu(isOpen: Boolean) {
@@ -213,6 +278,7 @@ class EditViewModel(
                     isNameError = false
                 )
             }
+            recalculateSaveEnabled()
         }
     }
 

@@ -25,6 +25,7 @@ import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.Second
 import com.example.targym.ui.theme.SecondText
 import com.example.targym.R
+import com.example.targym.ui.theme.HintTextStyle
 
 @Composable
 fun MuscleGroupSection(
@@ -64,13 +65,7 @@ fun MuscleGroupSection(
             ) {
                 Text(
                     text = stringResource(R.string.add_first_exercise),
-                    style = TextStyle(
-                        fontFamily = InterFont,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = SecondText.copy(alpha = 0.7f),
-                        textAlign = TextAlign.Center
-                    )
+                    style = HintTextStyle
                 )
             }
         } else {

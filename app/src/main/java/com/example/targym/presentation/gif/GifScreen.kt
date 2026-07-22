@@ -5,23 +5,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.targym.domain.model.Advice
 import com.example.targym.domain.model.Exercise
 import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.domain.model.Repetition
@@ -44,12 +36,10 @@ import com.example.targym.ui.theme.FirstText
 import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.Second
 import com.example.targym.ui.theme.SecondText
-import com.example.targym.ui.theme.Third
 
 @Composable
 fun GifScreen(
     exercise: Exercise,
-    advices: List<Advice>,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -91,67 +81,14 @@ fun GifScreen(
 
             Box(
                 modifier = Modifier
-                    .height(200.dp)
+                    .height(400.dp)
                     .padding(vertical = 16.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .background(SecondText)
             )
 
-            Row(
-                modifier = Modifier,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Lightbulb,
-                    contentDescription = null,
-                    tint = Accent,
-                    modifier = Modifier.size(20.dp)
-                )
-
-                Spacer(modifier = Modifier.width(4.dp))
-
-                Text(
-                    text = "Советы",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        color = Accent,
-                        fontFamily = InterFont,
-                        fontWeight = FontWeight.Medium
-                    ),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            advices.forEach { advice ->
-                AdviceSingle(advice)
-                Spacer(modifier = Modifier.height(4.dp))
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(BorderStroke(1.dp, SecondText), shape = RoundedCornerShape(8.dp))
-                    .background(Third),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Добавить совет",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = SecondText,
-                        fontFamily = InterFont,
-                        fontWeight = FontWeight.Normal
-                    ),
-                    modifier = Modifier.padding(vertical = 12.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Button(
                 onClick = {},
@@ -182,48 +119,6 @@ fun GifScreen(
     }
 }
 
-@Composable
-fun AdviceSingle(
-    advice: Advice,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Third)
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-                .size(20.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.ChevronRight,
-                contentDescription = null,
-                tint = Accent,
-                modifier = Modifier
-                    .size(18.dp)
-            )
-        }
-
-        Text(
-            text = advice.title,
-            style = TextStyle(
-                fontSize = 16.sp,
-                color = FirstText,
-                fontFamily = InterFont,
-                fontWeight = FontWeight.Normal
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .padding(vertical = 8.dp)
-        )
-    }
-}
-
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun GifPreview() {
@@ -236,6 +131,5 @@ fun GifPreview() {
                 Repetition(1, 1, 105.0, 6, isDone = false)
             )
         ),
-        advices = listOf(Advice(1, 1, "Спину прямо"))
     )
 }

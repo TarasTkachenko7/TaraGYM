@@ -1,7 +1,7 @@
 package com.example.targym.domain.repository
 
-import com.example.targym.domain.model.Advice
 import com.example.targym.domain.model.Exercise
+import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.domain.model.WorkoutDay
 import kotlinx.coroutines.flow.Flow
 
@@ -15,10 +15,7 @@ interface WorkoutRepository {
     fun getExercisesByWorkoutDay(workoutDayId: Long): Flow<List<Exercise>>
     suspend fun saveExercise(exercise: Exercise)
     suspend fun deleteExercise(exerciseId: Long)
-
-    fun getAdvicesForExercise(exerciseId: Long): Flow<List<Advice>>
-    suspend fun addAdvice(advice: Advice)
-    suspend fun deleteAdvice(adviceId: Long)
+    suspend fun deleteExercisesByMuscleGroup(workoutDayId: Long, muscleGroup: MuscleGroup)
 
     suspend fun toggleRepetitionDone(exerciseId: Long, repetitionId: Long)
     suspend fun resetAllDoneFlags(workoutDayId: Long)

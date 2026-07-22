@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -85,7 +86,10 @@ fun SetRowItem(
                         fontFamily = InterFont,
                         textAlign = TextAlign.Center
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
                     cursorBrush = SolidColor(Accent),
                     decorationBox = { innerTextField ->
                         Box(contentAlignment = Alignment.Center) {
@@ -128,7 +132,10 @@ fun SetRowItem(
                         fontFamily = InterFont,
                         textAlign = TextAlign.Center
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
                     cursorBrush = SolidColor(Accent),
                     decorationBox = { innerTextField ->
                         Box(contentAlignment = Alignment.Center) {

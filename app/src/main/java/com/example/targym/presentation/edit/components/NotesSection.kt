@@ -33,7 +33,7 @@ fun NotesSection(
         Text(
             text = stringResource(R.string.notes),
             style = TextStyle(
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 color = Accent,
                 fontWeight = FontWeight.Medium,
                 fontFamily = InterFont
@@ -46,13 +46,13 @@ fun NotesSection(
             value = noteText,
             onValueChange = onNoteChange,
             placeholder = {
-                Text(stringResource(R.string.add_details), color = SecondText, fontSize = 16.sp)
+                Text(stringResource(R.string.add_details), color = SecondText, fontSize = 15.sp)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp),
             shape = RoundedCornerShape(12.dp),
-            textStyle = TextStyle(color = FirstText, fontSize = 16.sp, fontFamily = InterFont),
+            textStyle = TextStyle(color = FirstText, fontSize = 15.sp, fontFamily = InterFont),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = Second,
                 unfocusedContainerColor = Second,

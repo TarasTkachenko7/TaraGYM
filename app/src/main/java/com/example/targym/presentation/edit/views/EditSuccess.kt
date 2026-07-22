@@ -118,6 +118,7 @@ fun EditSuccess(
         ) {
             SaveButton(
                 onClick = onSaveClick,
+                enabled = uiState.isSaveEnabled,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .background(Background)
