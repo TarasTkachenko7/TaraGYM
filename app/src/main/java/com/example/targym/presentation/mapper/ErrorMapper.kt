@@ -16,4 +16,5 @@ val AddWorkoutDayError.errorMessageRes: Int
 val UpdateWorkoutNameError.errorMessageRes: Int
     get() = when(this) {
         is UpdateWorkoutNameError.EmptyName -> R.string.error_empty_name
+        is UpdateWorkoutNameError.DuplicateName -> R.string.error_duplicate_day_name
     }

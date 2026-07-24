@@ -14,14 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.targym.presentation.main.components.buttons.AddTrainingDayButton
 import com.example.targym.presentation.main.components.EmptyStateContent
+import com.example.targym.presentation.main.components.buttons.AddTrainingDayButton
 import com.example.targym.ui.theme.Background
 
 @Composable
 fun MainEmpty(
-    onAddDayClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
+    onAddDayClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier

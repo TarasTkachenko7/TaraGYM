@@ -10,7 +10,6 @@ object Storage {
     )
 
     val mockExercises = mutableListOf<Exercise>(
-        // ==================== ДЕНЬ 1: ВЕРХ А (workoutDayId = 1) ====================
 
     )
 

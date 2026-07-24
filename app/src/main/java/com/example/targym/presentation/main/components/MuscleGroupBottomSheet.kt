@@ -1,6 +1,5 @@
 package com.example.targym.presentation.main.components
 
-import android.R.attr.fontFamily
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.targym.R
 import com.example.targym.domain.model.MuscleGroup
+import com.example.targym.presentation.mapper.titleRes
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.Background
 import com.example.targym.ui.theme.Black
@@ -43,11 +43,12 @@ import com.example.targym.ui.theme.FirstText
 import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.Second
 import com.example.targym.ui.theme.SecondText
+import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MuscleGroupBottomSheet(
-    availableGroups: List<MuscleGroup>,
+    availableGroups: ImmutableList<MuscleGroup>,
     onDismissRequest: () -> Unit,
     onMuscleGroupClick: (MuscleGroup) -> Unit,
     modifier: Modifier = Modifier,
@@ -122,7 +123,10 @@ fun MuscleGroupBottomSheet(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(availableGroups) { muscleGroup ->
+                    items(
+                        items = availableGroups,
+                        key = { it.name }
+                    ) { muscleGroup ->
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

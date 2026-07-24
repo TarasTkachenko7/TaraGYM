@@ -1,6 +1,8 @@
 package com.example.targym.data.impl
 
+import android.service.notification.Condition.newId
 import com.example.targym.data.Storage
+import com.example.targym.data.util.IdGenerator
 import com.example.targym.domain.model.Exercise
 import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.domain.repository.ExerciseRepository
@@ -8,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlin.plus
 
 class ExerciseRepositoryImpl : ExerciseRepository {
     private val _exercises = MutableStateFlow<List<Exercise>>(Storage.mockExercises)
@@ -30,18 +33,29 @@ class ExerciseRepositoryImpl : ExerciseRepository {
             if (exists) {
                 allExercises.map { if (it.id == exercise.id) exercise else it }
             } else {
-                val newId = System.currentTimeMillis()
-                val newExercise = exercise.copy(
-                    id = newId,
-                    repetitions = exercise.repetitions.map { it.copy(exerciseId = newId) }
+                val newExerciseId = if (exercise.id <= 0) IdGenerator.generateId() else exercise.id
+                val updatedRepetitions = exercise.repetitions.map { rep ->
+                    val repId = if (rep.id <= 0) IdGenerator.generateId() else rep.id
+                    rep.copy(id = repId, exerciseId = newExerciseId)
+                }
+                allExercises + exercise.copy(
+                    id = newExerciseId,
+                    repetitions = updatedRepetitions
                 )
-                allExercises + newExercise
             }
         }
     }
 
     override suspend fun deleteExercise(exerciseId: Long) {
-        _exercises.update { allExercises -> allExercises.filter { it.id != exerciseId } }
+        _exercises.update { allExercises ->
+            allExercises.filterNot { it.id == exerciseId }
+        }
+    }
+
+    override suspend fun deleteExercisesByWorkoutDay(workoutDayId: Long) {
+        _exercises.update { allExercises ->
+            allExercises.filterNot { it.workoutDayId == workoutDayId  }
+        }
     }
 
     override suspend fun deleteExercisesByMuscleGroup(workoutDayId: Long, muscleGroup: MuscleGroup) {

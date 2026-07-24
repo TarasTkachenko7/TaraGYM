@@ -15,18 +15,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.targym.R
 import com.example.targym.presentation.main.components.MuscleGroupBottomSheet
+import com.example.targym.presentation.main.state.MainScreenState
+import com.example.targym.presentation.main.state.MainUiAction
 import com.example.targym.presentation.main.views.MainEmpty
 import com.example.targym.presentation.main.views.MainLoading
 import com.example.targym.presentation.main.views.MainSuccess
+import com.example.targym.presentation.mapper.titleRes
 import com.example.targym.ui.theme.Background
-import com.example.targym.ui.theme.FirstText
+import com.example.targym.ui.theme.DialogBoxTextStyle
 import com.example.targym.ui.theme.Garbage
 import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.Second
 import com.example.targym.ui.theme.SecondText
-import com.example.targym.R
-import com.example.targym.ui.theme.DialogBoxTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,25 +41,12 @@ fun MainScreen(
 
     val handleAction: (MainUiAction) -> Unit = { action ->
         when (action) {
-            is MainUiAction.SelectDay -> viewModel.selectDay(action.dayId)
-            is MainUiAction.ToggleRepetition -> viewModel.toggleRepetitionCheck(action.exerciseId, action.repetitionId)
-            is MainUiAction.DeleteMuscleGroup -> viewModel.removeMuscleGroup(action.muscleGroup)
-            is MainUiAction.FinishWorkout -> viewModel.finishCurrentWorkout(action.workoutDayId)
-            is MainUiAction.OpenMuscleBottomSheet -> viewModel.openMuscleBottomSheet()
-            is MainUiAction.CloseMuscleBottomSheet -> viewModel.closeMuscleBottomSheet()
-            is MainUiAction.AddMuscleGroup -> viewModel.addMuscleGroup(action.muscleGroup)
-            is MainUiAction.ToggleMuscleMenu -> {
-                if (action.isOpen) viewModel.openMuscleMenu(action.muscleGroup)
-                else viewModel.closeMuscleMenu()
-            }
-            is MainUiAction.RequestDeleteMuscleGroup -> viewModel.requestDeleteMuscleGroup(action.muscleGroup)
-            is MainUiAction.ConfirmDeleteMuscleGroup -> viewModel.confirmDeleteMuscleGroup()
-            is MainUiAction.DismissDeleteMuscleGroupDialog -> viewModel.dismissDeleteMuscleGroupDialog()
-
             is MainUiAction.OpenManageDays,
             is MainUiAction.AddExercise,
             is MainUiAction.OpenVideo,
             is MainUiAction.OpenEditExercise -> onNavigate(action)
+
+            else -> viewModel.onAction(action)
         }
     }
 
@@ -78,24 +67,7 @@ fun MainScreen(
             is MainScreenState.Success -> {
                 MainSuccess(
                     uiState = state.uiState,
-                    onDaySelected = { dayId -> handleAction(MainUiAction.SelectDay(dayId)) },
-                    onRepetitionClick = { exId, repId -> handleAction(MainUiAction.ToggleRepetition(exId, repId)) },
-                    onMenuClick = { handleAction(MainUiAction.OpenManageDays) },
-                    onMuscleGroupButton = { handleAction(MainUiAction.OpenMuscleBottomSheet) },
-                    onMenuToggle = { muscleGroup, open -> handleAction(MainUiAction.ToggleMuscleMenu(muscleGroup, open)) },
-                    onAddExerciseClick = { muscleGroup -> handleAction(MainUiAction.AddExercise(dayId = state.uiState.selectedDayId, muscleGroup)) },
-                    onDeleteGroupClick = { muscleGroup -> handleAction(MainUiAction.RequestDeleteMuscleGroup(muscleGroup)) },
-                    onVideoClick = { exId -> handleAction(MainUiAction.OpenVideo(exId)) },
-                    onEditClick = { exerciseId, muscleGroup ->
-                        handleAction(
-                            MainUiAction.OpenEditExercise(
-                                exerciseId = exerciseId,
-                                dayId = state.uiState.selectedDayId,
-                                muscleGroup = muscleGroup
-                            )
-                        )
-                    },
-                    onFinishWorkoutClick = { dayId -> handleAction(MainUiAction.FinishWorkout(dayId)) }
+                    onAction = handleAction
                 )
 
                 if (state.uiState.isMuscleBottomSheetOpen) {

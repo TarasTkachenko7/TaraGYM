@@ -35,7 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.targym.R
-import com.example.targym.presentation.main.RepetitionUiModel
+import com.example.targym.presentation.model.RepetitionUiModel
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.Black
 import com.example.targym.ui.theme.FirstText
@@ -93,7 +93,7 @@ fun SingleRepetition(
         Icon(
             imageVector = Icons.Default.Close,
             contentDescription = stringResource(R.string.x_info),
-            tint = SecondText.copy(alpha= 0.3F),
+            tint = SecondText.copy(alpha = 0.3F),
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .size(16.dp)

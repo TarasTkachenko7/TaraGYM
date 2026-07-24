@@ -38,7 +38,6 @@ import com.example.targym.R
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.Background
 import com.example.targym.ui.theme.Border
-import com.example.targym.ui.theme.FirstText
 import com.example.targym.ui.theme.Garbage
 import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.SecondText
@@ -73,7 +72,7 @@ fun MuscleGroupSectionHeader(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = ripple(true),
                     role = Role.Button,
-                    onClick = { onAddExerciseClick() }
+                    onClick = onAddExerciseClick
                 )
                 .padding(6.dp)
         )
