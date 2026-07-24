@@ -3,7 +3,6 @@ package com.example.targym.presentation.days
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.targym.domain.model.WorkoutDay
-import com.example.targym.domain.repository.WorkoutRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
