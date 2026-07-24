@@ -10,11 +10,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.targym.R
+import com.example.targym.domain.repository.ExerciseRepository
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 
 class EditViewModel(
-    private val repository: WorkoutRepository
+    private val repository: ExerciseRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditUiState())

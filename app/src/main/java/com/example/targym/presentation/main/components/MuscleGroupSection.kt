@@ -14,23 +14,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.targym.domain.model.MuscleGroup
-import com.example.targym.presentation.main.ExerciseUiModel
-import com.example.targym.ui.theme.InterFont
-import com.example.targym.ui.theme.Second
-import com.example.targym.ui.theme.SecondText
 import com.example.targym.R
+import com.example.targym.domain.model.MuscleGroup
+import com.example.targym.presentation.mapper.titleRes
+import com.example.targym.presentation.model.ExerciseUiModel
 import com.example.targym.ui.theme.HintTextStyle
+import com.example.targym.ui.theme.Second
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MuscleGroupSection(
     muscleGroup: MuscleGroup,
-    exercises: List<ExerciseUiModel>,
+    exercises: ImmutableList<ExerciseUiModel>,
     isMenuExpanded: Boolean,
     onMenuToggle: (Boolean) -> Unit,
     onAddExerciseClick: () -> Unit,

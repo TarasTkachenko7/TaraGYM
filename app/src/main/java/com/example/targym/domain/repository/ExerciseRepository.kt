@@ -9,6 +9,7 @@ interface ExerciseRepository {
     fun getExerciseById(exerciseId: Long): Flow<Exercise?>
     suspend fun saveExercise(exercise: Exercise)
     suspend fun deleteExercise(exerciseId: Long)
+    suspend fun deleteExercisesByWorkoutDay(workoutDayId: Long)
     suspend fun deleteExercisesByMuscleGroup(workoutDayId: Long, muscleGroup: MuscleGroup)
     suspend fun toggleRepetitionDone(exerciseId: Long, repetitionId: Long)
     suspend fun resetAllDoneFlags(workoutDayId: Long)

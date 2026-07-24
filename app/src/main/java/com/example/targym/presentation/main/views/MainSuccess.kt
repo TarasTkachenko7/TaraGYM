@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -17,27 +18,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.targym.domain.model.MuscleGroup
-import com.example.targym.presentation.main.MainUiState
 import com.example.targym.presentation.main.components.DayEmptyState
 import com.example.targym.presentation.main.components.ExercisesList
 import com.example.targym.presentation.main.components.WorkoutDaysMenu
 import com.example.targym.presentation.main.components.buttons.AddMuscleGroupFAB
+import com.example.targym.presentation.main.state.MainUiAction
+import com.example.targym.presentation.main.state.MainUiState
 import com.example.targym.ui.theme.Background
 
 @Composable
 fun MainSuccess(
     uiState: MainUiState,
-    onDaySelected: (Long) -> Unit,
-    onRepetitionClick: (Long, Long) -> Unit,
-    onMenuClick: () -> Unit,
-    onMuscleGroupButton: () -> Unit,
-    onMenuToggle: (MuscleGroup, Boolean) -> Unit,
-    onAddExerciseClick: (MuscleGroup) -> Unit,
-    onDeleteGroupClick: (MuscleGroup) -> Unit,
-    onVideoClick: (Long) -> Unit,
-    onEditClick: (Long, MuscleGroup) -> Unit,
-    onFinishWorkoutClick: (Long) -> Unit,
+    onAction: (MainUiAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val lazyListState = rememberLazyListState()
@@ -61,9 +53,8 @@ fun MainSuccess(
         ) {
             WorkoutDaysMenu(
                 items = uiState.workoutDays,
-                selectedDayId = uiState.selectedDayId,
-                onDayClick = onDaySelected,
-                onMenuClick = onMenuClick
+                onDayClick = { dayId -> onAction(MainUiAction.SelectDay(dayId)) },
+                onMenuClick = { onAction(MainUiAction.OpenManageDays) }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -83,23 +74,26 @@ fun MainSuccess(
                     groupedExercises = uiState.groupedExercises,
                     activeMuscleMenuGroup = uiState.activeMuscleMenuGroup,
                     hasActiveWorkout = uiState.hasActiveWorkout,
-                    onRepetitionClick = onRepetitionClick,
-                    onMenuToggle = onMenuToggle,
-                    onAddExerciseClick = onAddExerciseClick,
-                    onDeleteGroupClick = onDeleteGroupClick,
-                    onVideoClick = onVideoClick,
-                    onEditClick = onEditClick,
-                    onFinishWorkoutClick = onFinishWorkoutClick,
-                    modifier = Modifier.fillMaxWidth().weight(1f)
+                    onRepetitionClick = { exId, repId -> onAction(MainUiAction.ToggleRepetition(exId, repId)) },
+                    onMenuToggle = { muscleGroup, open -> onAction(MainUiAction.ToggleMuscleMenu(muscleGroup, open)) },
+                    onAddExerciseClick = { muscleGroup -> onAction(MainUiAction.AddExercise(muscleGroup)) },
+                    onDeleteGroupClick = { muscleGroup -> onAction(MainUiAction.RequestDeleteMuscleGroup(muscleGroup)) },
+                    onVideoClick = { exId -> onAction(MainUiAction.OpenVideo(exId)) },
+                    onEditClick = { exId, _ -> onAction(MainUiAction.OpenEditExercise(exId)) },
+                    onFinishWorkoutClick = { dayId -> onAction(MainUiAction.FinishWorkout(dayId)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
                 )
             }
         }
 
         AddMuscleGroupFAB(
-            onClick = onMuscleGroupButton,
+            onClick = { onAction(MainUiAction.OpenMuscleBottomSheet) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 24.dp, end = 20.dp)
+                .navigationBarsPadding()
+                .padding(bottom = 16.dp, end = 20.dp)
         )
     }
 }

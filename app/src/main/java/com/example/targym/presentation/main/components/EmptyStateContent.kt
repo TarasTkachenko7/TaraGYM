@@ -15,20 +15,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.targym.R
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.BigHintTextStyle
-import com.example.targym.ui.theme.FirstText
 import com.example.targym.ui.theme.HintTextStyle
-import com.example.targym.ui.theme.InterFont
-import com.example.targym.ui.theme.SecondText
 
 @Composable
 fun EmptyStateContent(
@@ -42,7 +37,7 @@ fun EmptyStateContent(
             painter = painterResource(id = R.drawable.image_for_emptyscreen),
             contentDescription = null,
             contentScale = ContentScale.Fit,
-            modifier = modifier
+            modifier = Modifier
                 .height(240.dp)
                 .padding(horizontal = 16.dp)
         )
@@ -52,10 +47,12 @@ fun EmptyStateContent(
         Text(
             text = buildAnnotatedString {
                 append(stringResource(R.string.you_don_have))
-                withStyle(style = SpanStyle(
-                    color = Accent,
-                    fontWeight = FontWeight.ExtraBold
-                )) {
+                withStyle(
+                    style = SpanStyle(
+                        color = Accent,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                ) {
                     append(stringResource(R.string.training_days))
                 }
             },

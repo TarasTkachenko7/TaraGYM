@@ -14,8 +14,8 @@ import com.example.targym.presentation.edit.EditViewModel
 import com.example.targym.presentation.gif.GifScreen
 import com.example.targym.presentation.gif.GifViewModel
 import com.example.targym.presentation.main.MainScreen
-import com.example.targym.presentation.main.MainUiAction
 import com.example.targym.presentation.main.MainViewModel
+import com.example.targym.presentation.main.state.MainUiAction
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -41,23 +41,13 @@ fun AppNavHost(
                             navController.navigate(Screen.ManageDays)
                         }
                         is MainUiAction.AddExercise -> {
-                            navController.navigate(Screen.Edit(
-                                exerciseId = -1L,
-                                dayId = action.dayId,
-                                muscleGroup = action.muscleGroup
-                            ))
-                        }
-                        is MainUiAction.OpenVideo -> {
-                            navController.navigate(Screen.OpenGif(
-                                action.exerciseId
-                            ))
+                            navController.navigate(Screen.Edit)
                         }
                         is MainUiAction.OpenEditExercise -> {
-                            navController.navigate(Screen.Edit(
-                                exerciseId = action.exerciseId,
-                                dayId = action.dayId,
-                                muscleGroup = action.muscleGroup
-                            ))
+                            navController.navigate(Screen.Edit)
+                        }
+                        is MainUiAction.OpenVideo -> {
+                            navController.navigate(Screen.OpenGif)
                         }
                         else -> {}
                     }

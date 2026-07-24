@@ -35,7 +35,6 @@ fun AddMuscleGroupFAB(
         shape = RoundedCornerShape(12.dp),
         modifier = modifier
             .defaultMinSize(minHeight = 50.dp, minWidth = 1.dp)
-            .navigationBarsPadding()
     ) {
         Icon(
             imageVector = Icons.Default.Add,

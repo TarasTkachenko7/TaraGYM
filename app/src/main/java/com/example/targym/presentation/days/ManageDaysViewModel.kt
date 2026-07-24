@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.example.targym.R
+import com.example.targym.domain.repository.ExerciseRepository
+import com.example.targym.domain.repository.WorkoutDayRepository
 
 class ManageDaysViewModel(
-    val repository: WorkoutRepository
+    val repository: WorkoutDayRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ManageDaysScreenState())
     val uiState: StateFlow<ManageDaysScreenState> = _uiState.asStateFlow()

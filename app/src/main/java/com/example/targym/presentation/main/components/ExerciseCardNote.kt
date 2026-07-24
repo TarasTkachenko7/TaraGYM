@@ -47,7 +47,7 @@ fun ExerciseCardNote(
                 )
             }
             .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Default.FlashOn,

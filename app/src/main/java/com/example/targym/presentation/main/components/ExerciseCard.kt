@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.targym.domain.model.MuscleGroup
-import com.example.targym.presentation.main.ExerciseUiModel
 import com.example.targym.presentation.main.components.buttons.EditButton
+import com.example.targym.presentation.model.ExerciseUiModel
 import com.example.targym.ui.theme.Background
 import com.example.targym.ui.theme.Border
 

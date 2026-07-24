@@ -32,18 +32,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.targym.R
-import com.example.targym.domain.model.WorkoutDay
+import com.example.targym.presentation.model.WorkoutDayUiModel
 import com.example.targym.ui.theme.Accent
 import com.example.targym.ui.theme.Black
 import com.example.targym.ui.theme.Border
 import com.example.targym.ui.theme.FirstText
 import com.example.targym.ui.theme.InterFont
 import com.example.targym.ui.theme.Second
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun WorkoutDaysMenu(
-    items: List<WorkoutDay>,
-    selectedDayId: Long,
+    items: ImmutableList<WorkoutDayUiModel>,
     onDayClick: (Long) -> Unit,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -56,7 +56,7 @@ fun WorkoutDaysMenu(
             .clip(RoundedCornerShape(12.dp))
             .background(Second)
             .padding(4.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         BoxWithConstraints(
             modifier = Modifier.weight(1f)
@@ -72,12 +72,10 @@ fun WorkoutDaysMenu(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items.forEach { item ->
-                    val isSelected = item.id == selectedDayId
-
                     WorkoutDayTab(
-                        item.name,
-                        isSelected,
-                        itemWidth,
+                        name = item.name,
+                        isSelected = item.isSelected,
+                        width = itemWidth,
                         onClick = { onDayClick(item.id) }
                     )
                 }

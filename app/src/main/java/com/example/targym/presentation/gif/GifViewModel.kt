@@ -2,6 +2,7 @@ package com.example.targym.presentation.gif
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.targym.domain.repository.ExerciseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -9,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class GifViewModel(
     private val exerciseId: Long,
-    private val repository: WorkoutRepository
+    private val repository: ExerciseRepository
 ) : ViewModel(){
 
     private val _uiState = MutableStateFlow<GifScreenState>(GifScreenState.Loading)
