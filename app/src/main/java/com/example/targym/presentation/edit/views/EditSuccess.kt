@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.targym.R
-import com.example.targym.presentation.edit.EditUiState
 import com.example.targym.presentation.edit.components.AddRepetitionButton
 import com.example.targym.presentation.edit.components.EditScreenHeader
 import com.example.targym.presentation.edit.components.ExerciseTitleSection
@@ -28,22 +27,14 @@ import com.example.targym.presentation.edit.components.NotesSection
 import com.example.targym.presentation.edit.components.RepetitionsHeader
 import com.example.targym.presentation.edit.components.SaveButton
 import com.example.targym.presentation.edit.components.SetRowItem
+import com.example.targym.presentation.edit.state.EditUiAction
+import com.example.targym.presentation.edit.state.EditUiState
 import com.example.targym.ui.theme.Background
 
 @Composable
 fun EditSuccess(
     uiState: EditUiState,
-    onNavigationClick: () -> Unit,
-    onMoreClick: () -> Unit,
-    onDismissMenu: () -> Unit,
-    onRenameClick: () -> Unit,
-    onDeleteClick: () -> Unit,
-    onNameChange: (String) -> Unit,
-    onNoteChange: (String) -> Unit,
-    onRepetitionChange: (Long, String, String) -> Unit,
-    onAddRepetition: () -> Unit,
-    onRemoveRepetition: (Long) -> Unit,
-    onSaveClick: () -> Unit,
+    onAction: (EditUiAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -59,11 +50,11 @@ fun EditSuccess(
             EditScreenHeader(
                 title = if (uiState.exerciseId == -1L) stringResource(R.string.add) else stringResource(R.string.editing_exercise),
                 isMenuExpanded = uiState.isMenuExpanded,
-                onNavigationClick = onNavigationClick,
-                onMoreClick = onMoreClick,
-                onDismissMenu = onDismissMenu,
-                onRenameClick = onRenameClick,
-                onDeleteClick = onDeleteClick
+                onNavigationClick = { onAction(EditUiAction.NavigateBack) },
+                onMoreClick = { onAction(EditUiAction.ToggleMenu(true)) },
+                onDismissMenu = { onAction(EditUiAction.ToggleMenu(false)) },
+                onRenameClick = { onAction(EditUiAction.OpenRenameDialog) },
+                onDeleteClick = { onAction(EditUiAction.OpenDeleteConfirmation) }
             )
 
             LazyColumn(
@@ -92,22 +83,22 @@ fun EditSuccess(
                         weight = repetition.weight,
                         reps = repetition.quantity,
                         onWeightChange = { newWeight ->
-                            onRepetitionChange(repetition.id, newWeight, repetition.quantity)
+                            onAction(EditUiAction.RepetitionChanged(repetition.id, newWeight, repetition.quantity))
                         },
                         onRepsChange = { newReps ->
-                            onRepetitionChange(repetition.id, repetition.weight, newReps)
+                            onAction(EditUiAction.RepetitionChanged(repetition.id, repetition.weight, newReps))
                         },
-                        onDeleteClick = { onRemoveRepetition(repetition.id) }
+                        onDeleteClick = { onAction(EditUiAction.RemoveRepetition(repetition.id)) }
                     )
                 }
 
                 item {
                     Spacer(modifier = Modifier.height(4.dp))
-                    AddRepetitionButton(onClick = onAddRepetition)
+                    AddRepetitionButton(onClick = { onAction(EditUiAction.AddRepetition) })
                     Spacer(modifier = Modifier.height(28.dp))
                     NotesSection(
                         noteText = uiState.note,
-                        onNoteChange = onNoteChange
+                        onNoteChange = { onAction(EditUiAction.NoteChanged(it)) }
                     )
                 }
             }
@@ -117,7 +108,7 @@ fun EditSuccess(
             modifier = Modifier.fillMaxSize()
         ) {
             SaveButton(
-                onClick = onSaveClick,
+                onClick = { onAction(EditUiAction.SaveExercise) },
                 enabled = uiState.isSaveEnabled,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)

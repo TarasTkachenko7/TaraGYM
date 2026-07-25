@@ -23,7 +23,7 @@ sealed interface MainUiAction {
     data object DismissDeleteMuscleGroupDialog : MainUiAction
 
     // === 4. Управление упражнениями и навигация ===
-    data class AddExercise(val muscleGroup: MuscleGroup) : MainUiAction
-    data class OpenEditExercise(val exerciseId: Long) : MainUiAction
+    data class AddExercise(val dayId: Long, val muscleGroup: MuscleGroup) : MainUiAction
+    data class OpenEditExercise(val exerciseId: Long, val dayId: Long, val muscleGroup: MuscleGroup) : MainUiAction
     data class OpenVideo(val exerciseId: Long) : MainUiAction
 }

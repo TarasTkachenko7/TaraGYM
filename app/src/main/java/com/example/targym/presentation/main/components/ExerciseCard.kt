@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.presentation.main.components.buttons.EditButton
+import com.example.targym.presentation.main.state.MainUiAction
 import com.example.targym.presentation.model.ExerciseUiModel
 import com.example.targym.ui.theme.Background
 import com.example.targym.ui.theme.Border
@@ -24,9 +24,8 @@ import com.example.targym.ui.theme.Border
 @Composable
 fun ExerciseCard(
     exercise: ExerciseUiModel,
-    onRepetitionClick: (Long, Long) -> Unit,
-    onVideoClick: (Long) -> Unit,
-    onEditClick: (Long, MuscleGroup) -> Unit,
+    selectedDayId: Long,
+    onAction: (MainUiAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -42,7 +41,7 @@ fun ExerciseCard(
     ) {
         ExerciseCardHeader(
             name = exercise.name,
-            onVideoClick = { onVideoClick(exercise.id) }
+            onVideoClick = { onAction(MainUiAction.OpenVideo(exercise.id)) }
         )
 
         if (!exercise.note.isNullOrBlank()) {
@@ -56,7 +55,7 @@ fun ExerciseCard(
             key(repetition.id) {
                 SingleRepetition(
                     repetition = repetition,
-                    onCheckClick = { onRepetitionClick(exercise.id, repetition.id) }
+                    onCheckClick = { onAction(MainUiAction.ToggleRepetition(exercise.id, repetition.id)) }
                 )
             }
         }
@@ -64,7 +63,7 @@ fun ExerciseCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         EditButton(
-            onClick = { onEditClick(exercise.id, exercise.muscleGroup) },
+            onClick = { onAction(MainUiAction.OpenEditExercise(exercise.id, selectedDayId, exercise.muscleGroup)) },
             modifier = Modifier.align(Alignment.End)
         )
     }

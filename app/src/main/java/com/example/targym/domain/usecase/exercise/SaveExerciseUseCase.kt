@@ -15,7 +15,7 @@ class SaveExerciseUseCase(
 
         val cleanedNote = exercise.note?.trim()?.ifBlank { null }
         val cleanedExercise = exercise.copy (
-            name = exercise.name.trim(),
+            name = trimmedName,
             note = cleanedNote
         )
 

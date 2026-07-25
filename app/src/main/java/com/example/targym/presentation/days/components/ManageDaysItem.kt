@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.targym.R
 import com.example.targym.domain.model.WorkoutDay
+import com.example.targym.presentation.model.WorkoutDayUiModel
 import com.example.targym.ui.theme.Background
 import com.example.targym.ui.theme.FirstText
 import com.example.targym.ui.theme.Garbage
@@ -38,7 +39,7 @@ import com.example.targym.ui.theme.Second
 
 @Composable
 fun ManageDaysItem(
-    day: WorkoutDay,
+    day: WorkoutDayUiModel,
     onStartEdit: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier

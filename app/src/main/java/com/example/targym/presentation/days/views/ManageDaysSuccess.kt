@@ -11,32 +11,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.targym.domain.model.WorkoutDay
 import com.example.targym.presentation.days.components.ManageDaysItem
+import com.example.targym.presentation.model.WorkoutDayUiModel
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun ManageDaysSuccess(
-    days: List<WorkoutDay>,
+    days: ImmutableList<WorkoutDayUiModel>, // Используем ImmutableList
     onStartEdit: (Long) -> Unit,
-    onDeleteClick: (WorkoutDay) -> Unit,
+    onDeleteClick: (WorkoutDayUiModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(
-            bottom = 96.dp
-        )
+        contentPadding = PaddingValues(bottom = 96.dp)
     ) {
         items(
             items = days,
             key = { it.id }
         ) { day ->
-            key(day.id) {
-                ManageDaysItem(
-                    day = day,
-                    onStartEdit = { onStartEdit(day.id) },
-                    onDeleteClick = { onDeleteClick(day) }
-                )
-            }
+            ManageDaysItem(
+                day = day,
+                onStartEdit = { onStartEdit(day.id) },
+                onDeleteClick = { onDeleteClick(day) }
+            )
         }
     }
 }

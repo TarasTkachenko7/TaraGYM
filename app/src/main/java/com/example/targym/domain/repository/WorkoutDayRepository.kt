@@ -7,5 +7,5 @@ interface WorkoutDayRepository {
     fun getWorkoutDays(): Flow<List<WorkoutDay>>
     suspend fun addWorkoutDay(name: String): Long
     suspend fun deleteWorkoutDay(workoutDayId: Long)
-    suspend fun updateWorkoutDayName(id: Long, newName: String)
+    suspend fun updateWorkoutDayName(workoutDayId: Long, newName: String)
 }

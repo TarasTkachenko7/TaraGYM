@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.presentation.main.components.buttons.FinishWorkoutButton
+import com.example.targym.presentation.main.state.MainUiAction
 import com.example.targym.presentation.model.ExerciseUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -24,13 +25,7 @@ fun ExercisesList(
     groupedExercises: ImmutableMap<MuscleGroup, ImmutableList<ExerciseUiModel>>,
     activeMuscleMenuGroup: MuscleGroup?,
     hasActiveWorkout: Boolean,
-    onRepetitionClick: (Long, Long) -> Unit,
-    onMenuToggle: (MuscleGroup, Boolean) -> Unit,
-    onAddExerciseClick: (MuscleGroup) -> Unit,
-    onDeleteGroupClick: (MuscleGroup) -> Unit,
-    onVideoClick: (Long) -> Unit,
-    onEditClick: (Long, MuscleGroup) -> Unit,
-    onFinishWorkoutClick: (Long) -> Unit,
+    onAction: (MainUiAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val groupedEntries = remember(groupedExercises) { groupedExercises.entries.toList() }
@@ -46,15 +41,11 @@ fun ExercisesList(
             key = { (muscleGroup, _) -> "group_${selectedDayId}_${muscleGroup.name}" }
         ) { (muscleGroup, exercisesForGroup) ->
             MuscleGroupSection(
+                selectedDayId = selectedDayId,
                 muscleGroup = muscleGroup,
                 exercises = exercisesForGroup,
                 isMenuExpanded = activeMuscleMenuGroup == muscleGroup,
-                onMenuToggle = { open -> onMenuToggle(muscleGroup, open) },
-                onAddExerciseClick = { onAddExerciseClick(muscleGroup) },
-                onDeleteGroupClick = { onDeleteGroupClick(muscleGroup) },
-                onRepetitionClick = onRepetitionClick,
-                onVideoClick = onVideoClick,
-                onEditClick = onEditClick
+                onAction = onAction
             )
         }
 
@@ -62,7 +53,7 @@ fun ExercisesList(
             item(key = "finish_workout_button") {
                 Spacer(modifier = Modifier.height(12.dp))
                 FinishWorkoutButton(
-                    onClick = { onFinishWorkoutClick(selectedDayId) }
+                    onClick = { onAction(MainUiAction.FinishWorkout(selectedDayId)) }
                 )
             }
         }
