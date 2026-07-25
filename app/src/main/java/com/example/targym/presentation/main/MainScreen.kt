@@ -45,7 +45,6 @@ fun MainScreen(
             is MainUiAction.AddExercise,
             is MainUiAction.OpenVideo,
             is MainUiAction.OpenEditExercise -> onNavigate(action)
-
             else -> viewModel.onAction(action)
         }
     }

@@ -38,10 +38,10 @@ class WorkoutDayRepositoryImpl : WorkoutDayRepository {
         }
     }
 
-    override suspend fun updateWorkoutDayName(id: Long, newName: String) {
+    override suspend fun updateWorkoutDayName(workoutDayId: Long, newName: String) {
         _days.update { allDays ->
             allDays.map { day ->
-                if (day.id == id) day.copy(name = newName) else day
+                if (day.id == workoutDayId) day.copy(name = newName) else day
             }
         }
     }

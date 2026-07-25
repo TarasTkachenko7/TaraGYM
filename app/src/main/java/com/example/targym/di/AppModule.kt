@@ -46,7 +46,6 @@ val appModule = module {
     factoryOf(::FinishWorkoutUseCase)
 
     viewModelOf(::MainViewModel)
-
     viewModelOf(::EditViewModel)
     viewModelOf(::ManageDaysViewModel)
     viewModel { (exerciseId: Long) -> GifViewModel(exerciseId, get()) }

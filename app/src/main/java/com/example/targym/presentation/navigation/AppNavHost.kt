@@ -41,13 +41,29 @@ fun AppNavHost(
                             navController.navigate(Screen.ManageDays)
                         }
                         is MainUiAction.AddExercise -> {
-                            navController.navigate(Screen.Edit)
+                            navController.navigate(
+                                Screen.Edit(
+                                    exerciseId = -1L,
+                                    dayId = action.dayId,
+                                    muscleGroup = action.muscleGroup
+                                )
+                            )
                         }
                         is MainUiAction.OpenEditExercise -> {
-                            navController.navigate(Screen.Edit)
+                            navController.navigate(
+                                Screen.Edit(
+                                    exerciseId = action.exerciseId,
+                                    dayId = action.dayId,
+                                    muscleGroup = action.muscleGroup
+                                )
+                            )
                         }
                         is MainUiAction.OpenVideo -> {
-                            navController.navigate(Screen.OpenGif)
+                            navController.navigate(
+                                Screen.OpenGif(
+                                    exerciseId = action.exerciseId
+                                )
+                            )
                         }
                         else -> {}
                     }
