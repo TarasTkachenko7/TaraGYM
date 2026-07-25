@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.targym.R
 import com.example.targym.domain.model.MuscleGroup
+import com.example.targym.presentation.main.state.MainUiAction
 import com.example.targym.presentation.mapper.titleRes
 import com.example.targym.presentation.model.ExerciseUiModel
 import com.example.targym.ui.theme.HintTextStyle
@@ -25,15 +26,11 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MuscleGroupSection(
+    selectedDayId: Long,
     muscleGroup: MuscleGroup,
     exercises: ImmutableList<ExerciseUiModel>,
     isMenuExpanded: Boolean,
-    onMenuToggle: (Boolean) -> Unit,
-    onAddExerciseClick: () -> Unit,
-    onDeleteGroupClick: () -> Unit,
-    onRepetitionClick: (Long, Long) -> Unit,
-    onVideoClick: (Long) -> Unit,
-    onEditClick: (Long, MuscleGroup) -> Unit,
+    onAction: (MainUiAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -47,9 +44,9 @@ fun MuscleGroupSection(
         MuscleGroupSectionHeader(
             title = stringResource(muscleGroup.titleRes),
             isMenuExpanded = isMenuExpanded,
-            onMenuToggle = onMenuToggle,
-            onAddExerciseClick = onAddExerciseClick,
-            onDeleteGroupClick = onDeleteGroupClick
+            onMenuToggle = { open -> onAction(MainUiAction.ToggleMuscleMenu(muscleGroup, open)) },
+            onAddExerciseClick = { onAction(MainUiAction.AddExercise(selectedDayId, muscleGroup)) },
+            onDeleteGroupClick = { onAction(MainUiAction.RequestDeleteMuscleGroup(muscleGroup)) }
         )
 
         if (exercises.isEmpty()) {
@@ -69,9 +66,8 @@ fun MuscleGroupSection(
                 key(exercise.id) {
                     ExerciseCard(
                         exercise = exercise,
-                        onRepetitionClick = onRepetitionClick,
-                        onVideoClick = onVideoClick,
-                        onEditClick = onEditClick
+                        onAction = onAction,
+                        selectedDayId = selectedDayId
                     )
                 }
             }

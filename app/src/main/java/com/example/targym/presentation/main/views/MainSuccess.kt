@@ -74,13 +74,7 @@ fun MainSuccess(
                     groupedExercises = uiState.groupedExercises,
                     activeMuscleMenuGroup = uiState.activeMuscleMenuGroup,
                     hasActiveWorkout = uiState.hasActiveWorkout,
-                    onRepetitionClick = { exId, repId -> onAction(MainUiAction.ToggleRepetition(exId, repId)) },
-                    onMenuToggle = { muscleGroup, open -> onAction(MainUiAction.ToggleMuscleMenu(muscleGroup, open)) },
-                    onAddExerciseClick = { muscleGroup -> onAction(MainUiAction.AddExercise(uiState.selectedDayId, muscleGroup)) },
-                    onDeleteGroupClick = { muscleGroup -> onAction(MainUiAction.RequestDeleteMuscleGroup(muscleGroup)) },
-                    onVideoClick = { exId -> onAction(MainUiAction.OpenVideo(exId)) },
-                    onEditClick = { exId, muscleGroup -> onAction(MainUiAction.OpenEditExercise(exId, uiState.selectedDayId, muscleGroup)) },
-                    onFinishWorkoutClick = { dayId -> onAction(MainUiAction.FinishWorkout(dayId)) },
+                    onAction = onAction,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)

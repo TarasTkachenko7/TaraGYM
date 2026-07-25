@@ -1,6 +1,5 @@
 package com.example.targym.data.impl
 
-import android.service.notification.Condition.newId
 import com.example.targym.data.Storage
 import com.example.targym.data.util.IdGenerator
 import com.example.targym.domain.model.Exercise
@@ -10,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlin.plus
 
 class ExerciseRepositoryImpl : ExerciseRepository {
     private val _exercises = MutableStateFlow<List<Exercise>>(Storage.mockExercises)

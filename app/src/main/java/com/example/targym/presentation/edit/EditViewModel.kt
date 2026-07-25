@@ -98,9 +98,12 @@ class EditViewModel(
         _uiState.update { state ->
             val updated = state.repetitions.map { rep ->
                 if (rep.id == repId) {
-                    val cleanWeight = weightStr.replace(',', '.').filter { it.isDigit() || it == '.' }
+                    val cleanWeight = weightStr.replace(',', '.')
+                    val isValidWeight = cleanWeight.isEmpty() || cleanWeight.toDoubleOrNull() != null
+                    val finalWeight = if (isValidWeight) cleanWeight else rep.weight
                     val cleanReps = repsStr.filter { it.isDigit() }
-                    rep.copy(weight = cleanWeight, quantity = cleanReps)
+
+                    rep.copy(weight = finalWeight, quantity = cleanReps)
                 } else {
                     rep
                 }
