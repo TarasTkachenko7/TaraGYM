@@ -1,9 +1,9 @@
 package com.example.targym.presentation.gif
 
-import com.example.targym.domain.model.Exercise
+import androidx.annotation.StringRes
 
 sealed interface GifScreenState{
     data object Loading : GifScreenState
-    data class Success(val exercise: Exercise) : GifScreenState
-    data class Error(val message: String) : GifScreenState
+    data class Success(val exerciseName: String) : GifScreenState
+    data class Error(@StringRes val messageRes: Int) : GifScreenState
 }

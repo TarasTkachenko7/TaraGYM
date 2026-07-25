@@ -90,13 +90,13 @@ fun ManageDaysScreen(
         )
     }
 
-    if (state.isInputDialogOpen) {
+    if (state.inputDialog.isOpen) {
         InputDialog(
-            title = stringResource(state.inputDialogTitle),
-            text = state.inputDialogText,
+            title = stringResource(state.inputDialog.titleRes),
+            text = state.inputDialog.text,
             onTextChanged = { viewModel.onDialogTextChanged(it) },
-            errorMessageRes = state.errorMessage,
-            isEditMode = state.targetDayId != null,
+            errorMessageRes = state.inputDialog.errorMessageRes,
+            isEditMode = state.inputDialog.targetDayId != null,
             onConfirm = { viewModel.submitDialogInput() },
             onDismiss = { viewModel.closeInputDialog() }
         )

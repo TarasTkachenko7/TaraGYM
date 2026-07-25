@@ -22,14 +22,14 @@ fun GifScreen(
         }
         is GifScreenState.Success -> {
             GifSuccess(
-                exercise = state.exercise,
+                exerciseName = state.exerciseName,
                 onGotItClick = onDismiss,
                 modifier = modifier
             )
         }
         is GifScreenState.Error -> {
             GifError(
-                message = state.message,
+                messageRes = state.messageRes,
                 onGotItClick = onDismiss,
                 modifier = modifier
             )

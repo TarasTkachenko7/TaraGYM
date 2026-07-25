@@ -2,20 +2,33 @@ package com.example.targym.presentation.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.targym.R
+import com.example.targym.data.util.IdGenerator
 import com.example.targym.domain.model.Exercise
 import com.example.targym.domain.model.MuscleGroup
-import com.example.targym.domain.model.Repetition
+import com.example.targym.domain.usecase.exercise.DeleteExerciseUseCase
+import com.example.targym.domain.usecase.exercise.GetExerciseByIdUseCase
+import com.example.targym.domain.usecase.exercise.SaveExerciseUseCase
+import com.example.targym.domain.util.DomainResult
+import com.example.targym.presentation.edit.state.EditUiAction
+import com.example.targym.presentation.edit.state.EditUiState
+import com.example.targym.presentation.edit.state.RenameDialogState
+import com.example.targym.presentation.edit.state.RepetitionInputState
+import com.example.targym.presentation.mapper.toDomain
+import com.example.targym.presentation.mapper.toEditUiState
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import com.example.targym.R
-import com.example.targym.domain.repository.ExerciseRepository
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class EditViewModel(
-    private val repository: ExerciseRepository
+    private val getExerciseByIdUseCase: GetExerciseByIdUseCase,
+    private val saveExerciseUseCase: SaveExerciseUseCase,
+    private val deleteExerciseUseCase: DeleteExerciseUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditUiState())
@@ -29,12 +42,12 @@ class EditViewModel(
         viewModelScope.launch {
             if (exerciseId == -1L) {
                 val initialRepetition = RepetitionInputState(
-                    id = System.currentTimeMillis(),
+                    id = IdGenerator.generateId(),
                     weight = "",
                     quantity = ""
                 )
 
-                originalExercise = Exercise(
+                val newExercise = Exercise(
                     id = -1L,
                     workoutDayId = dayId,
                     muscleGroup = muscleGroup,
@@ -43,45 +56,20 @@ class EditViewModel(
                     note = null
                 )
 
+                originalExercise = newExercise
+
                 _uiState.update {
-                    it.copy(
-                        exerciseId = -1L,
-                        dayId = dayId,
-                        muscleGroup = muscleGroup,
-                        name = defaultName,
-                        repetitions = listOf(initialRepetition),
-                        isNewExercise = true,
-                        isLoading = false
+                    newExercise.toEditUiState(isNewExercise = true).copy(
+                        repetitions = persistentListOf(initialRepetition)
                     )
                 }
                 recalculateSaveEnabled()
-
             } else {
-                val exercises = repository.getExercisesByWorkoutDay(dayId).firstOrNull() ?: emptyList()
-                val exercise = exercises.find { it.id == exerciseId }
-
+                val exercise = getExerciseByIdUseCase(exerciseId).firstOrNull()
                 if (exercise != null) {
                     originalExercise = exercise
-                    _uiState.update {
-                        EditUiState(
-                            exerciseId = exercise.id,
-                            dayId = exercise.workoutDayId,
-                            name = exercise.name,
-                            note = exercise.note ?: "",
-                            muscleGroup = exercise.muscleGroup,
-                            repetitions = exercise.repetitions.map { rep ->
-                                RepetitionInputState(
-                                    id = rep.id,
-                                    weight = if (rep.weight == 0.0) "" else if (rep.weight % 1 == 0.0) rep.weight.toInt().toString() else rep.weight.toString(),
-                                    quantity = if (rep.quantity == 0) "" else rep.quantity.toString()
-                                )
-                            },
-                            isNewExercise = false,
-                            isLoading = false
-                        )
-                    }
+                    _uiState.update { exercise.toEditUiState(isNewExercise = false) }
                     recalculateSaveEnabled()
-
                 } else {
                     _uiState.update {
                         it.copy(
@@ -97,7 +85,7 @@ class EditViewModel(
     }
 
     fun onNameChange(newName: String) {
-        _uiState.update { it.copy(name = newName, isNameError = false) }
+        _uiState.update { it.copy(name = newName) }
         recalculateSaveEnabled()
     }
 
@@ -116,7 +104,7 @@ class EditViewModel(
                 } else {
                     rep
                 }
-            }
+            }.toImmutableList()
             state.copy(repetitions = updated)
         }
         recalculateSaveEnabled()
@@ -125,17 +113,22 @@ class EditViewModel(
     fun addRepetition() {
         _uiState.update { state ->
             val newRepetition = RepetitionInputState(
-                id = System.currentTimeMillis(),
+                id = IdGenerator.generateId(),
                 weight = "",
                 quantity = ""
             )
-            state.copy(repetitions = state.repetitions + newRepetition, isSaveEnabled = true)
+            state.copy(
+                repetitions = (state.repetitions + newRepetition).toImmutableList(),
+                isSaveEnabled = true
+            )
         }
     }
 
     fun removeRepetition(repId: Long) {
         _uiState.update { state ->
-            state.copy(repetitions = state.repetitions.filterNot { it.id == repId })
+            state.copy(
+                repetitions = state.repetitions.filterNot { it.id == repId }.toImmutableList()
+            )
         }
         recalculateSaveEnabled()
     }
@@ -145,40 +138,25 @@ class EditViewModel(
         val isNameValid = state.name.isNotBlank()
         val hasRepetitions = state.repetitions.isNotEmpty()
         val hasChanges = hasUnsavedChanges()
-
         val isEnabled = isNameValid && hasRepetitions && hasChanges
+
         _uiState.update { it.copy(isSaveEnabled = isEnabled) }
     }
 
     fun saveExercise() {
         val state = _uiState.value
-
         if (!state.isSaveEnabled) return
 
-        val domainRepetitions = state.repetitions.map { rep ->
-            val weight = rep.weight.toDoubleOrNull() ?: 0.0
-            val quantity = rep.quantity.toIntOrNull() ?: 0
-            Repetition(
-                id = rep.id,
-                exerciseId = state.exerciseId,
-                weight = weight,
-                quantity = quantity,
-                isDone = false
-            )
-        }
+        val fallbackGroup = state.muscleGroup ?: MuscleGroup.CHEST
+        val exerciseToSave = state.toDomain(fallbackGroup)
 
         viewModelScope.launch {
-            val exerciseToSave = Exercise(
-                id = if (state.exerciseId == -1L) System.currentTimeMillis() else state.exerciseId,
-                workoutDayId = state.dayId,
-                muscleGroup = state.muscleGroup!!,
-                name = state.name.trim(),
-                repetitions = domainRepetitions,
-                note = state.note.trim().ifBlank { null }
-            )
-
-            repository.saveExercise(exerciseToSave)
-            _uiState.update { it.copy(isSaved = true) }
+            when (saveExerciseUseCase(exerciseToSave)) {
+                is DomainResult.Success -> _uiState.update { it.copy(isSaved = true) }
+                is DomainResult.Error -> {
+                    _uiState.update { it.copy(errorMessage = R.string.error_empty_name) }
+                }
+            }
         }
     }
 
@@ -186,22 +164,10 @@ class EditViewModel(
         val current = _uiState.value
         val original = originalExercise ?: return current.name.isNotBlank() || current.repetitions.isNotEmpty()
 
-        val currentDomainRepetitions = current.repetitions.map { rep ->
-            val weight = rep.weight.toDoubleOrNull() ?: 0.0
-            val quantity = rep.quantity.toIntOrNull() ?: 0
-            Repetition(id = rep.id, exerciseId = current.exerciseId, weight = weight, quantity = quantity, isDone = false)
-        }
+        val fallbackGroup = current.muscleGroup ?: original.muscleGroup
+        val currentConverted = current.toDomain(fallbackGroup)
 
-        val currentExerciseConverted = Exercise(
-            id = current.exerciseId,
-            workoutDayId = current.dayId,
-            muscleGroup = current.muscleGroup ?: original.muscleGroup,
-            name = current.name.trim(),
-            repetitions = currentDomainRepetitions,
-            note = current.note.trim().ifBlank { null }
-        )
-
-        return currentExerciseConverted != original
+        return currentConverted != original
     }
 
     fun onBackRequested(onConfirmNavigate: () -> Unit) {
@@ -240,7 +206,7 @@ class EditViewModel(
 
         viewModelScope.launch {
             if (state.exerciseId != -1L) {
-                repository.deleteExercise(state.exerciseId)
+                deleteExerciseUseCase(state.exerciseId)
             }
             _uiState.update { it.copy(isSaved = true) }
         }
@@ -254,42 +220,59 @@ class EditViewModel(
         _uiState.update {
             it.copy(
                 isMenuExpanded = false,
-                isRenameDialogOpen = true,
-                tempNameInput = it.name
+                renameDialog = RenameDialogState(
+                    isOpen = true,
+                    tempNameInput = it.name
+                )
             )
         }
     }
 
     fun closeRenameDialog() {
-        _uiState.update { it.copy(isRenameDialogOpen = false) }
+        _uiState.update {
+            it.copy(renameDialog = RenameDialogState())
+        }
     }
 
     fun onTempNameChanged(newName: String) {
-        _uiState.update { it.copy(tempNameInput = newName) }
+        _uiState.update { state ->
+            state.copy(
+                renameDialog = state.renameDialog.copy(tempNameInput = newName)
+            )
+        }
     }
 
     fun confirmRename() {
-        val newName = _uiState.value.tempNameInput.trim()
+        val newName = _uiState.value.renameDialog.tempNameInput.trim()
         if (newName.isNotBlank()) {
             _uiState.update {
                 it.copy(
                     name = newName,
-                    isRenameDialogOpen = false,
-                    isNameError = false
+                    renameDialog = RenameDialogState()
                 )
             }
             recalculateSaveEnabled()
         }
     }
 
-    fun deleteExercise() {
-        val state = _uiState.value
-        toggleMenu(false)
-        viewModelScope.launch {
-            if (state.exerciseId != -1L) {
-                repository.deleteExercise(state.exerciseId)
-            }
-            _uiState.update { it.copy(isSaved = true) }
+    fun onAction(action: EditUiAction, onConfirmNavigate: (() -> Unit)? = null) {
+        when (action) {
+            is EditUiAction.NavigateBack -> onConfirmNavigate?.let { onBackRequested(it) }
+            is EditUiAction.ToggleMenu -> toggleMenu(action.isOpen)
+            is EditUiAction.NameChanged -> onNameChange(action.name)
+            is EditUiAction.NoteChanged -> onNoteChange(action.note)
+            is EditUiAction.RepetitionChanged -> onRepetitionChange(action.repId, action.weight, action.reps)
+            is EditUiAction.AddRepetition -> addRepetition()
+            is EditUiAction.RemoveRepetition -> removeRepetition(action.repId)
+            is EditUiAction.OpenRenameDialog -> openRenameDialog()
+            is EditUiAction.CloseRenameDialog -> closeRenameDialog()
+            is EditUiAction.TempNameChanged -> onTempNameChanged(action.name)
+            is EditUiAction.ConfirmRename -> confirmRename()
+            is EditUiAction.OpenDeleteConfirmation -> openDeleteConfirmationDialog()
+            is EditUiAction.CloseDeleteConfirmation -> closeDeleteConfirmationDialog()
+            is EditUiAction.ConfirmDelete -> confirmDeleteExercise()
+            is EditUiAction.DismissExitDialog -> dismissExitDialog()
+            is EditUiAction.SaveExercise -> saveExercise()
         }
     }
 

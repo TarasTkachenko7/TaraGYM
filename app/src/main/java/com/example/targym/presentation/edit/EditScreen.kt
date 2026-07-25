@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.targym.R
 import com.example.targym.domain.model.MuscleGroup
+import com.example.targym.presentation.edit.state.EditUiAction
 import com.example.targym.presentation.edit.views.EditLoading
 import com.example.targym.presentation.edit.views.EditSuccess
 import com.example.targym.ui.theme.Accent
@@ -65,22 +66,19 @@ fun EditScreen(
     } else {
         EditSuccess(
             uiState = uiState,
-            onNavigationClick = { viewModel.onBackRequested(onConfirmNavigate = onNavigationClick) },
-            onMoreClick = { viewModel.toggleMenu(true) },
-            onDismissMenu = { viewModel.toggleMenu(false) },
-            onRenameClick = { viewModel.openRenameDialog() },
-            onDeleteClick = { viewModel.openDeleteConfirmationDialog() },
-            onNameChange = { viewModel.onNameChange(it) },
-            onNoteChange = { viewModel.onNoteChange(it) },
-            onRepetitionChange = { repId, weight, reps -> viewModel.onRepetitionChange(repId, weight, reps) },
-            onAddRepetition = { viewModel.addRepetition() },
-            onRemoveRepetition = { repId -> viewModel.removeRepetition(repId) },
-            onSaveClick = { viewModel.saveExercise() },
+            onAction = { action ->
+                when (action) {
+                    is EditUiAction.NavigateBack -> {
+                        viewModel.onAction(action, onConfirmNavigate = onNavigationClick)
+                    }
+                    else -> viewModel.onAction(action)
+                }
+            },
             modifier = modifier
         )
     }
 
-    if (uiState.isRenameDialogOpen) {
+    if (uiState.renameDialog.isOpen) {
         AlertDialog(
             onDismissRequest = { viewModel.closeRenameDialog() },
             containerColor = Second,
@@ -103,12 +101,12 @@ fun EditScreen(
                         .padding(12.dp)
                 ) {
                     BasicTextField(
-                        value = uiState.tempNameInput,
+                        value = uiState.renameDialog.tempNameInput,
                         onValueChange = { viewModel.onTempNameChanged(it) },
                         textStyle = TextStyle(fontFamily = InterFont, fontSize = 16.sp, color = FirstText),
                         cursorBrush = SolidColor(Accent),
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             },
