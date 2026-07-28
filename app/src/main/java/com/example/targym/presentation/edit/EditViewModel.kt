@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 class EditViewModel(
     private val getExerciseByIdUseCase: GetExerciseByIdUseCase,
@@ -186,8 +187,11 @@ class EditViewModel(
     }
 
     fun confirmExitWithoutSaving(onConfirmNavigate: () -> Unit) {
-        dismissExitDialog()
-        onConfirmNavigate()
+        viewModelScope.launch {
+            _uiState.update { it.copy(showExitConfirmationDialog = false) }
+            yield()
+            onConfirmNavigate()
+        }
     }
 
     fun openDeleteConfirmationDialog() {
@@ -205,12 +209,12 @@ class EditViewModel(
 
     fun confirmDeleteExercise() {
         val state = _uiState.value
-        closeDeleteConfirmationDialog()
-
         viewModelScope.launch {
+            _uiState.update { it.copy(isDeleteConfirmationOpen = false) }
             if (state.exerciseId != -1L) {
                 deleteExerciseUseCase(state.exerciseId)
             }
+            yield()
             _uiState.update { it.copy(isSaved = true) }
         }
     }
