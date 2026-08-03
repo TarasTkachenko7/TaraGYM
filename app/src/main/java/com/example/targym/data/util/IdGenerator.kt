@@ -1,9 +1,10 @@
 package com.example.targym.data.util
 
-import java.util.UUID
+import java.util.concurrent.atomic.AtomicLong
 
 object IdGenerator {
+    private val counter = AtomicLong(System.currentTimeMillis() * 1000)
     fun generateId(): Long {
-        return UUID.randomUUID().mostSignificantBits and Long.MAX_VALUE
+        return counter.incrementAndGet()
     }
 }

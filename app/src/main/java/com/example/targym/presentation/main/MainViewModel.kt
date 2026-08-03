@@ -10,6 +10,7 @@ import com.example.targym.domain.usecase.exercise.GetExercisesByDayUseCase
 import com.example.targym.domain.usecase.workout.FinishWorkoutUseCase
 import com.example.targym.domain.usecase.workout.ToggleRepetitionDoneUseCase
 import com.example.targym.domain.usecase.workoutday.GetWorkoutDaysUseCase
+import com.example.targym.domain.util.CoroutineDispatchers
 import com.example.targym.presentation.main.state.MainLocalState
 import com.example.targym.presentation.main.state.MainScreenState
 import com.example.targym.presentation.main.state.MainUiAction
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -38,7 +40,8 @@ class MainViewModel(
     private val getExercisesByDayUseCase: GetExercisesByDayUseCase,
     private val toggleRepetitionDoneUseCase: ToggleRepetitionDoneUseCase,
     private val finishWorkoutUseCase: FinishWorkoutUseCase,
-    private val deleteExercisesByMuscleGroupUseCase: DeleteExercisesByMuscleGroupUseCase
+    private val deleteExercisesByMuscleGroupUseCase: DeleteExercisesByMuscleGroupUseCase,
+    dispatchers: CoroutineDispatchers
 ) : ViewModel() {
 
     private val _localState = MutableStateFlow(MainLocalState())
@@ -70,7 +73,9 @@ class MainViewModel(
                 MainScreenState.Success(uiState)
             }
         }
-    }.stateIn(
+    }
+    .flowOn(dispatchers.default)
+    .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = MainScreenState.Loading
