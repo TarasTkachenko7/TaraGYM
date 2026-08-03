@@ -5,27 +5,36 @@ import com.example.targym.data.util.IdGenerator
 import com.example.targym.domain.model.Exercise
 import com.example.targym.domain.model.MuscleGroup
 import com.example.targym.domain.repository.ExerciseRepository
+import com.example.targym.domain.util.CoroutineDispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 
-class ExerciseRepositoryImpl : ExerciseRepository {
+class ExerciseRepositoryImpl(
+    private val dispatchers: CoroutineDispatchers
+) : ExerciseRepository {
     private val _exercises = MutableStateFlow<List<Exercise>>(Storage.mockExercises)
 
     override fun getExercisesByWorkoutDay(workoutDayId: Long): Flow<List<Exercise>> {
-        return _exercises.map { allExercises ->
-            allExercises.filter { it.workoutDayId == workoutDayId }
-        }
+        return _exercises
+            .map { allExercises ->
+                allExercises.filter { it.workoutDayId == workoutDayId }
+            }
+            .flowOn(dispatchers.default)
     }
 
     override fun getExerciseById(exerciseId: Long): Flow<Exercise?> {
-        return _exercises.map { allExercises ->
-            allExercises.find { it.id == exerciseId }
-        }
+        return _exercises
+            .map { allExercises ->
+                allExercises.find { it.id == exerciseId }
+            }
+            .flowOn(dispatchers.default)
     }
 
-    override suspend fun saveExercise(exercise: Exercise) {
+    override suspend fun saveExercise(exercise: Exercise) = withContext(dispatchers.io) {
         _exercises.update { allExercises ->
             val exists = allExercises.any { it.id == exercise.id }
             if (exists) {
@@ -44,25 +53,25 @@ class ExerciseRepositoryImpl : ExerciseRepository {
         }
     }
 
-    override suspend fun deleteExercise(exerciseId: Long) {
+    override suspend fun deleteExercise(exerciseId: Long) = withContext(dispatchers.io) {
         _exercises.update { allExercises ->
             allExercises.filterNot { it.id == exerciseId }
         }
     }
 
-    override suspend fun deleteExercisesByWorkoutDay(workoutDayId: Long) {
+    override suspend fun deleteExercisesByWorkoutDay(workoutDayId: Long) = withContext(dispatchers.io) {
         _exercises.update { allExercises ->
             allExercises.filterNot { it.workoutDayId == workoutDayId  }
         }
     }
 
-    override suspend fun deleteExercisesByMuscleGroup(workoutDayId: Long, muscleGroup: MuscleGroup) {
+    override suspend fun deleteExercisesByMuscleGroup(workoutDayId: Long, muscleGroup: MuscleGroup) = withContext(dispatchers.io) {
         _exercises.update { allExercises ->
             allExercises.filterNot { it.workoutDayId == workoutDayId && it.muscleGroup == muscleGroup }
         }
     }
 
-    override suspend fun toggleRepetitionDone(exerciseId: Long, repetitionId: Long) {
+    override suspend fun toggleRepetitionDone(exerciseId: Long, repetitionId: Long) = withContext(dispatchers.io) {
         _exercises.update { allExercises ->
             allExercises.map { exercise ->
                 if (exercise.id == exerciseId) {
@@ -76,7 +85,7 @@ class ExerciseRepositoryImpl : ExerciseRepository {
         }
     }
 
-    override suspend fun resetAllDoneFlags(workoutDayId: Long) {
+    override suspend fun resetAllDoneFlags(workoutDayId: Long) = withContext(dispatchers.io) {
         _exercises.update { allExercises ->
             allExercises.map { exercise ->
                 if (exercise.workoutDayId == workoutDayId) {
