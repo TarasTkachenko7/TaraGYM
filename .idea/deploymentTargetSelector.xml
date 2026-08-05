@@ -23,10 +23,10 @@
       </SelectionState>
       <SelectionState runConfigName="main">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-07-17T14:32:46.959758Z">
+        <DropdownSelection timestamp="2026-08-05T10:32:04.866249900Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=RZCT910VXPV" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Taras\.android\avd\Medium_Phone.avd" />
             </handle>
           </Target>
         </DropdownSelection>

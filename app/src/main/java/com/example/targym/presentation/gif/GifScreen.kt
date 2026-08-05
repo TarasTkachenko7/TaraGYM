@@ -23,6 +23,8 @@ fun GifScreen(
         is GifScreenState.Success -> {
             GifSuccess(
                 exerciseName = state.exerciseName,
+                mediaUri = state.mediaUri,
+                onMediaSelected = { uri -> viewModel.onMediaSelected(uri) },
                 onGotItClick = onDismiss,
                 modifier = modifier
             )
