@@ -7,4 +7,5 @@ data class Exercise(
     val name: String,
     val repetitions: List<Repetition>,
     val note: String?,
+    val mediaUri: String? = null
 )

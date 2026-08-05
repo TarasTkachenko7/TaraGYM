@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">TarGYM</string>
     <string name="chest">Грудь</string>
     <string name="back">Спина</string>
@@ -79,5 +80,10 @@
     <string name="exit_without_saving">Выйти</string>
     <string name="delete_exercise_title">Удаление упражнения</string>
     <string name="delete_exercise_confirm">Вы действительно хотите удалить упражнение?</string>
+
+    <!--    GifScreen    -->
+    <string name="add_photo">Добавить фото/видео</string>
+    <string name="add_media">Добавить медиа</string>
+    <string name="error_media_not_found">Файл не найден на вашем устройстве :(</string>
 
 </resources>
